@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Header } from './Layout/Header';
@@ -30,9 +29,7 @@ export function MainApp() {
     }
   });
 
-  if (is
-
-) {
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">

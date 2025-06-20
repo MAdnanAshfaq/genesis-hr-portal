@@ -3,7 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { User, Mail, Calendar, Building, MapPin } from 'lucide-react';
+import { User, Calendar, Building } from 'lucide-react';
 
 export function ProfileView() {
   const { user } = useAuth();
@@ -42,10 +42,10 @@ export function ProfileView() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <Mail className="h-5 w-5 text-gray-500" />
+                <User className="h-5 w-5 text-gray-500" />
                 <div>
-                  <p className="text-sm text-gray-500">Email Address</p>
-                  <p className="font-medium">{user.email}</p>
+                  <p className="text-sm text-gray-500">Username</p>
+                  <p className="font-medium">@{user.username}</p>
                 </div>
               </div>
               
@@ -53,7 +53,7 @@ export function ProfileView() {
                 <Building className="h-5 w-5 text-gray-500" />
                 <div>
                   <p className="text-sm text-gray-500">Department</p>
-                  <p className="font-medium">{user.department}</p>
+                  <p className="font-medium capitalize">{user.department}</p>
                 </div>
               </div>
             </div>
