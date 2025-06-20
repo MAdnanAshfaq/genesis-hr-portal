@@ -1,14 +1,25 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import { useAuth } from '@/contexts/AuthContext';
+import { LoginForm } from '@/components/Auth/LoginForm';
+import { MainApp } from '@/components/MainApp';
 
 const Index = () => {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-genesis-50 to-genesis-100">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-primary rounded-xl flex items-center justify-center mx-auto mb-4 animate-pulse">
+            <span className="text-white font-bold text-2xl">G</span>
+          </div>
+          <p className="text-gray-600">Loading GenesisHR...</p>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
+
+  return isAuthenticated ? <MainApp /> : <LoginForm />;
 };
 
 export default Index;
