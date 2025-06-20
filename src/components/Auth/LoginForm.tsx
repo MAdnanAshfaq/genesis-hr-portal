@@ -96,7 +96,7 @@ export function LoginForm() {
                 <p><strong>HR:</strong> hr@genesishr.com</p>
                 <p><strong>Manager:</strong> manager@genesishr.com</p>
                 <p><strong>Employee:</strong> employee@genesishr.com</p>
-                <p className="mt-2"><strong>Password:</strong> password</p>
+                <p className="mt-2"><strong>Password:</strong> Genesis@123sword</p>
               </div>
             </div>
           </CardContent>

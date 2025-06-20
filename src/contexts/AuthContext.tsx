@@ -82,7 +82,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     const user = mockUsers.find(u => u.email === credentials.email);
     
-    if (user && credentials.password === 'password') {
+    if (user && credentials.password === 'Genesis@123sword') {
       localStorage.setItem('genesishr_user', JSON.stringify(user));
       setAuthState({
         user,
