@@ -8,12 +8,31 @@ import { LeaveRequestsList } from './LeaveRequests/LeaveRequestsList';
 import { UserManagementView } from './UserManagement/UserManagementView';
 import { AnnouncementsView } from './Announcements/AnnouncementsView';
 import { ProfileView } from './Profile/ProfileView';
+import { AdminConsole } from './Admin/AdminConsole';
 
 export function MainApp() {
   const { user, isLoading } = useAuth();
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState(() => {
+    // Set default tab based on user role
+    if (!user) return 'dashboard';
+    
+    switch (user.role) {
+      case 'admin':
+        return 'admin-console';
+      case 'hr':
+        return 'hr-dashboard';
+      case 'manager':
+        return user.department === 'sales' ? 'manager-dashboard-sales' : 'manager-dashboard-production';
+      case 'employee':
+        return 'employee-dashboard';
+      default:
+        return 'dashboard';
+    }
+  });
 
-  if (isLoading) {
+  if (is
+
+) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
@@ -32,16 +51,22 @@ export function MainApp() {
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'dashboard':
-        return <DashboardView />;
+      case 'admin-console':
+        return user.role === 'admin' ? <AdminConsole /> : <DashboardView />;
+      case 'hr-dashboard':
+        return user.role === 'hr' ? <DashboardView /> : <DashboardView />;
+      case 'manager-dashboard-sales':
+        return user.role === 'manager' && user.department === 'sales' ? <DashboardView /> : <DashboardView />;
+      case 'manager-dashboard-production':
+        return user.role === 'manager' && user.department === 'production' ? <DashboardView /> : <DashboardView />;
+      case 'employee-dashboard':
+        return user.role === 'employee' ? <DashboardView /> : <DashboardView />;
       case 'leave-requests':
         return <LeaveRequestsList />;
       case 'users':
         return <UserManagementView />;
       case 'announcements':
         return <AnnouncementsView />;
-      case 'team':
-        return <UserManagementView />; // Managers see user management as team management
       case 'profile':
         return <ProfileView />;
       default:

@@ -9,7 +9,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2 } from 'lucide-react';
 
 export function LoginForm() {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -21,9 +21,9 @@ export function LoginForm() {
     setError('');
 
     try {
-      const success = await login({ email, password });
+      const success = await login({ username, password });
       if (!success) {
-        setError('Invalid email or password');
+        setError('Invalid username or password');
       }
     } catch (err) {
       setError('An error occurred during login');
@@ -55,13 +55,13 @@ export function LoginForm() {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="username">Username</Label>
                 <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Enter your username"
                   required
                 />
               </div>
@@ -92,10 +92,12 @@ export function LoginForm() {
             <div className="mt-6 p-4 bg-gray-50 rounded-lg">
               <p className="text-sm font-medium text-gray-700 mb-2">Demo Accounts:</p>
               <div className="space-y-1 text-xs text-gray-600">
-                <p><strong>Admin:</strong> admin@genesishr.com</p>
-                <p><strong>HR:</strong> hr@genesishr.com</p>
-                <p><strong>Manager:</strong> manager@genesishr.com</p>
-                <p><strong>Employee:</strong> employee@genesishr.com</p>
+                <p><strong>Admin:</strong> admin</p>
+                <p><strong>HR:</strong> hr_sarah</p>
+                <p><strong>Sales Manager:</strong> manager_sales</p>
+                <p><strong>Production Manager:</strong> manager_production</p>
+                <p><strong>Sales Employee:</strong> emp_sales_1</p>
+                <p><strong>Production Employee:</strong> emp_production_1</p>
                 <p className="mt-2"><strong>Password:</strong> Genesis@123sword</p>
               </div>
             </div>

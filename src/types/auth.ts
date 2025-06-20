@@ -1,13 +1,16 @@
 
 export interface User {
   id: string;
-  email: string;
+  username: string;
+  password: string;
   firstName: string;
   lastName: string;
   role: 'admin' | 'hr' | 'manager' | 'employee';
-  department: string;
+  department: 'sales' | 'production' | 'hr' | 'admin';
   joinDate: string;
   avatar?: string;
+  createdBy?: string;
+  createdDate?: string;
 }
 
 export interface AuthState {
@@ -17,6 +20,15 @@ export interface AuthState {
 }
 
 export interface LoginCredentials {
-  email: string;
+  username: string;
   password: string;
+}
+
+export interface CreateUserData {
+  username: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  role: 'hr' | 'manager' | 'employee';
+  department: 'sales' | 'production' | 'hr';
 }
