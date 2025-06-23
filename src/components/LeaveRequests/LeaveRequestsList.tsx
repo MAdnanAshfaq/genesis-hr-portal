@@ -1,87 +1,65 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLeaveRequests } from '@/hooks/useLeaveRequests';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { LeaveRequestForm } from './LeaveRequestForm';
-import { mockLeaveRequests } from '@/data/mockData';
 import { useToast } from '@/hooks/use-toast';
-import { Plus, Calendar, Clock, MessageSquare, Send } from 'lucide-react';
+import { Plus, Calendar, Clock, MessageSquare, Send, Loader2 } from 'lucide-react';
 
 export function LeaveRequestsList() {
   const { user } = useAuth();
+  const { requests, isLoading, updateRequestStatus, addReply } = useLeaveRequests();
   const { toast } = useToast();
   const [showForm, setShowForm] = useState(false);
-  const [requests, setRequests] = useState(mockLeaveRequests);
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [replyText, setReplyText] = useState('');
 
   if (!user) return null;
 
-  const handleSubmitRequest = (data: any) => {
-    const newRequest = {
-      id: String(requests.length + 1),
-      userId: user.id,
-      userName: `${user.firstName} ${user.lastName}`,
-      ...data,
-    };
-    
-    setRequests(prev => [newRequest, ...prev]);
+  const handleSubmitRequest = () => {
     setShowForm(false);
-  };
-
-  const handleApproveRequest = (requestId: string) => {
-    setRequests(prev => prev.map(req => 
-      req.id === requestId 
-        ? { ...req, status: 'approved' as const, approvedBy: `${user.firstName} ${user.lastName}`, approvedDate: new Date().toISOString().split('T')[0] }
-        : req
-    ));
     toast({
-      title: "Request Approved",
-      description: "Leave request has been approved successfully.",
+      title: "Request Submitted",
+      description: "Your leave request has been submitted successfully.",
     });
   };
 
-  const handleRejectRequest = (requestId: string) => {
-    setRequests(prev => prev.map(req => 
-      req.id === requestId 
-        ? { ...req, status: 'rejected' as const, approvedBy: `${user.firstName} ${user.lastName}`, approvedDate: new Date().toISOString().split('T')[0] }
-        : req
-    ));
-    toast({
-      title: "Request Rejected",
-      description: "Leave request has been rejected.",
-    });
+  const handleApproveRequest = async (requestId: string) => {
+    const success = await updateRequestStatus(requestId, 'approved', `${user.firstName} ${user.lastName}`);
+    if (success) {
+      toast({
+        title: "Request Approved",
+        description: "Leave request has been approved successfully.",
+      });
+    }
   };
 
-  const handleSendReply = (requestId: string) => {
+  const handleRejectRequest = async (requestId: string) => {
+    const success = await updateRequestStatus(requestId, 'rejected', `${user.firstName} ${user.lastName}`);
+    if (success) {
+      toast({
+        title: "Request Rejected",
+        description: "Leave request has been rejected.",
+      });
+    }
+  };
+
+  const handleSendReply = async (requestId: string) => {
     if (!replyText.trim()) return;
     
-    setRequests(prev => prev.map(req => 
-      req.id === requestId 
-        ? { 
-            ...req, 
-            replies: [
-              ...(req.replies || []),
-              {
-                id: String(Date.now()),
-                message: replyText,
-                from: `${user.firstName} ${user.lastName}`,
-                timestamp: new Date().toISOString(),
-              }
-            ]
-          }
-        : req
-    ));
-    
-    setReplyText('');
-    setReplyingTo(null);
-    toast({
-      title: "Reply Sent",
-      description: "Your reply has been sent to the employee.",
-    });
+    const success = await addReply(requestId, replyText, `${user.firstName} ${user.lastName}`);
+    if (success) {
+      setReplyText('');
+      setReplyingTo(null);
+      toast({
+        title: "Reply Sent",
+        description: "Your reply has been sent to the employee.",
+      });
+    }
   };
 
   // Filter requests based on user role
@@ -92,8 +70,6 @@ export function LeaveRequestsList() {
   } else if (user.role === 'manager') {
     // Manager sees requests from their department only
     userRequests = requests.filter(req => {
-      // You would need to get the requester's department from their user data
-      // For now, showing all requests for managers
       return req.status === 'pending' || req.approvedBy === `${user.firstName} ${user.lastName}`;
     });
   }
@@ -109,6 +85,14 @@ export function LeaveRequestsList() {
           onSubmit={handleSubmitRequest}
           onCancel={() => setShowForm(false)}
         />
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="p-6 flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
   }

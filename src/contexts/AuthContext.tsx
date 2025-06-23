@@ -1,5 +1,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { User as SupabaseUser } from '@supabase/supabase-js';
+import { supabase } from '@/lib/supabase';
 import { User, AuthState, LoginCredentials, CreateUserData } from '@/types/auth';
 
 interface AuthContextType extends AuthState {
@@ -8,85 +10,11 @@ interface AuthContextType extends AuthState {
   createUser: (userData: CreateUserData) => Promise<boolean>;
   updateUser: (userId: string, userData: Partial<User>) => Promise<boolean>;
   deleteUser: (userId: string) => Promise<boolean>;
-  getAllUsers: () => User[];
-  getUsersByDepartment: (department: string) => User[];
+  getAllUsers: () => Promise<User[]>;
+  getUsersByDepartment: (department: string) => Promise<User[]>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-// Mock users with new structure
-const initialMockUsers: User[] = [
-  {
-    id: '1',
-    username: 'admin',
-    password: 'Genesis@123sword',
-    firstName: 'System',
-    lastName: 'Administrator',
-    role: 'admin',
-    department: 'admin',
-    joinDate: '2020-01-01',
-  },
-  {
-    id: '2',
-    username: 'hr_sarah',
-    password: 'Genesis@123sword',
-    firstName: 'Sarah',
-    lastName: 'Johnson',
-    role: 'hr',
-    department: 'hr',
-    joinDate: '2021-03-15',
-    createdBy: 'admin',
-    createdDate: '2021-03-15',
-  },
-  {
-    id: '3',
-    username: 'manager_sales',
-    password: 'Genesis@123sword',
-    firstName: 'Mike',
-    lastName: 'Wilson',
-    role: 'manager',
-    department: 'sales',
-    joinDate: '2020-06-01',
-    createdBy: 'admin',
-    createdDate: '2020-06-01',
-  },
-  {
-    id: '4',
-    username: 'manager_production',
-    password: 'Genesis@123sword',
-    firstName: 'Lisa',
-    lastName: 'Chen',
-    role: 'manager',
-    department: 'production',
-    joinDate: '2020-08-15',
-    createdBy: 'admin',
-    createdDate: '2020-08-15',
-  },
-  {
-    id: '5',
-    username: 'emp_sales_1',
-    password: 'Genesis@123sword',
-    firstName: 'Emily',
-    lastName: 'Davis',
-    role: 'employee',
-    department: 'sales',
-    joinDate: '2022-01-10',
-    createdBy: 'admin',
-    createdDate: '2022-01-10',
-  },
-  {
-    id: '6',
-    username: 'emp_production_1',
-    password: 'Genesis@123sword',
-    firstName: 'John',
-    lastName: 'Smith',
-    role: 'employee',
-    department: 'production',
-    joinDate: '2022-03-20',
-    createdBy: 'admin',
-    createdDate: '2022-03-20',
-  },
-];
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [authState, setAuthState] = useState<AuthState>({
@@ -94,108 +22,212 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     isAuthenticated: false,
     isLoading: true,
   });
-  const [users, setUsers] = useState<User[]>(initialMockUsers);
 
   useEffect(() => {
-    // Check for stored session on mount
-    const storedUser = localStorage.getItem('genesishr_user');
-    const storedUsers = localStorage.getItem('genesishr_users');
-    
-    if (storedUsers) {
-      try {
-        const parsedUsers = JSON.parse(storedUsers);
-        setUsers(parsedUsers);
-      } catch (error) {
-        console.error('Error parsing stored users:', error);
-      }
-    }
-    
-    if (storedUser) {
-      try {
-        const user = JSON.parse(storedUser);
-        setAuthState({
-          user,
-          isAuthenticated: true,
-          isLoading: false,
-        });
-      } catch (error) {
-        localStorage.removeItem('genesishr_user');
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        fetchUserProfile(session.user.id);
+      } else {
         setAuthState(prev => ({ ...prev, isLoading: false }));
       }
-    } else {
-      setAuthState(prev => ({ ...prev, isLoading: false }));
-    }
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (session) {
+          await fetchUserProfile(session.user.id);
+        } else {
+          setAuthState({
+            user: null,
+            isAuthenticated: false,
+            isLoading: false,
+          });
+        }
+      }
+    );
+
+    return () => subscription.unsubscribe();
   }, []);
 
-  // Save users to localStorage whenever users change
-  useEffect(() => {
-    localStorage.setItem('genesishr_users', JSON.stringify(users));
-  }, [users]);
+  const fetchUserProfile = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', userId)
+        .single();
 
-  const login = async (credentials: LoginCredentials): Promise<boolean> => {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    const user = users.find(u => u.username === credentials.username);
-    
-    if (user && user.password === credentials.password) {
-      localStorage.setItem('genesishr_user', JSON.stringify(user));
+      if (error) throw error;
+
+      const user: User = {
+        id: data.id,
+        username: data.username,
+        password: '', // Don't expose password
+        firstName: data.first_name,
+        lastName: data.last_name,
+        role: data.role,
+        department: data.department,
+        joinDate: data.join_date,
+        createdBy: data.created_by,
+        createdDate: data.created_at,
+      };
+
       setAuthState({
         user,
         isAuthenticated: true,
         isLoading: false,
       });
-      return true;
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+      setAuthState(prev => ({ ...prev, isLoading: false }));
     }
-    
-    return false;
   };
 
-  const logout = () => {
-    localStorage.removeItem('genesishr_user');
-    setAuthState({
-      user: null,
-      isAuthenticated: false,
-      isLoading: false,
-    });
+  const login = async (credentials: LoginCredentials): Promise<boolean> => {
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: credentials.username,
+        password: credentials.password,
+      });
+
+      if (error) throw error;
+      return true;
+    } catch (error) {
+      console.error('Login error:', error);
+      return false;
+    }
+  };
+
+  const logout = async () => {
+    await supabase.auth.signOut();
   };
 
   const createUser = async (userData: CreateUserData): Promise<boolean> => {
-    // Check if username already exists
-    if (users.some(u => u.username === userData.username)) {
+    try {
+      // First create auth user
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: userData.username,
+        password: userData.password,
+      });
+
+      if (authError) throw authError;
+
+      if (authData.user) {
+        // Then create user profile
+        const { error: profileError } = await supabase
+          .from('users')
+          .insert({
+            id: authData.user.id,
+            username: userData.username,
+            first_name: userData.firstName,
+            last_name: userData.lastName,
+            role: userData.role,
+            department: userData.department,
+            join_date: new Date().toISOString().split('T')[0],
+            created_by: authState.user?.username || 'admin',
+          });
+
+        if (profileError) throw profileError;
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Create user error:', error);
       return false;
     }
-
-    const newUser: User = {
-      id: String(Date.now()),
-      ...userData,
-      joinDate: new Date().toISOString().split('T')[0],
-      createdBy: authState.user?.username || 'admin',
-      createdDate: new Date().toISOString().split('T')[0],
-    };
-
-    setUsers(prev => [...prev, newUser]);
-    return true;
   };
 
   const updateUser = async (userId: string, userData: Partial<User>): Promise<boolean> => {
-    setUsers(prev => prev.map(user => 
-      user.id === userId ? { ...user, ...userData } : user
-    ));
-    return true;
+    try {
+      const { error } = await supabase
+        .from('users')
+        .update({
+          username: userData.username,
+          first_name: userData.firstName,
+          last_name: userData.lastName,
+          role: userData.role,
+          department: userData.department,
+        })
+        .eq('id', userId);
+
+      if (error) throw error;
+      return true;
+    } catch (error) {
+      console.error('Update user error:', error);
+      return false;
+    }
   };
 
   const deleteUser = async (userId: string): Promise<boolean> => {
-    setUsers(prev => prev.filter(user => user.id !== userId));
-    return true;
+    try {
+      const { error } = await supabase
+        .from('users')
+        .delete()
+        .eq('id', userId);
+
+      if (error) throw error;
+      return true;
+    } catch (error) {
+      console.error('Delete user error:', error);
+      return false;
+    }
   };
 
-  const getAllUsers = () => {
-    return users;
+  const getAllUsers = async (): Promise<User[]> => {
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      return data.map(user => ({
+        id: user.id,
+        username: user.username,
+        password: '',
+        firstName: user.first_name,
+        lastName: user.last_name,
+        role: user.role,
+        department: user.department,
+        joinDate: user.join_date,
+        createdBy: user.created_by,
+        createdDate: user.created_at,
+      }));
+    } catch (error) {
+      console.error('Get all users error:', error);
+      return [];
+    }
   };
 
-  const getUsersByDepartment = (department: string) => {
-    return users.filter(user => user.department === department);
+  const getUsersByDepartment = async (department: string): Promise<User[]> => {
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('department', department)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      return data.map(user => ({
+        id: user.id,
+        username: user.username,
+        password: '',
+        firstName: user.first_name,
+        lastName: user.last_name,
+        role: user.role,
+        department: user.department,
+        joinDate: user.join_date,
+        createdBy: user.created_by,
+        createdDate: user.created_at,
+      }));
+    } catch (error) {
+      console.error('Get users by department error:', error);
+      return [];
+    }
   };
 
   return (
