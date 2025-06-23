@@ -4,14 +4,19 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Textarea } from '@/components/ui/textarea';
 import { LeaveRequestForm } from './LeaveRequestForm';
 import { mockLeaveRequests } from '@/data/mockData';
-import { Plus, Calendar, Clock } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { Plus, Calendar, Clock, MessageSquare, Send } from 'lucide-react';
 
 export function LeaveRequestsList() {
   const { user } = useAuth();
+  const { toast } = useToast();
   const [showForm, setShowForm] = useState(false);
   const [requests, setRequests] = useState(mockLeaveRequests);
+  const [replyingTo, setReplyingTo] = useState<string | null>(null);
+  const [replyText, setReplyText] = useState('');
 
   if (!user) return null;
 
@@ -33,6 +38,10 @@ export function LeaveRequestsList() {
         ? { ...req, status: 'approved' as const, approvedBy: `${user.firstName} ${user.lastName}`, approvedDate: new Date().toISOString().split('T')[0] }
         : req
     ));
+    toast({
+      title: "Request Approved",
+      description: "Leave request has been approved successfully.",
+    });
   };
 
   const handleRejectRequest = (requestId: string) => {
@@ -41,13 +50,57 @@ export function LeaveRequestsList() {
         ? { ...req, status: 'rejected' as const, approvedBy: `${user.firstName} ${user.lastName}`, approvedDate: new Date().toISOString().split('T')[0] }
         : req
     ));
+    toast({
+      title: "Request Rejected",
+      description: "Leave request has been rejected.",
+    });
   };
 
-  const userRequests = user.role === 'employee' 
-    ? requests.filter(req => req.userId === user.id)
-    : requests;
+  const handleSendReply = (requestId: string) => {
+    if (!replyText.trim()) return;
+    
+    setRequests(prev => prev.map(req => 
+      req.id === requestId 
+        ? { 
+            ...req, 
+            replies: [
+              ...(req.replies || []),
+              {
+                id: String(Date.now()),
+                message: replyText,
+                from: `${user.firstName} ${user.lastName}`,
+                timestamp: new Date().toISOString(),
+              }
+            ]
+          }
+        : req
+    ));
+    
+    setReplyText('');
+    setReplyingTo(null);
+    toast({
+      title: "Reply Sent",
+      description: "Your reply has been sent to the employee.",
+    });
+  };
+
+  // Filter requests based on user role
+  let userRequests = requests;
+  
+  if (user.role === 'employee') {
+    userRequests = requests.filter(req => req.userId === user.id);
+  } else if (user.role === 'manager') {
+    // Manager sees requests from their department only
+    userRequests = requests.filter(req => {
+      // You would need to get the requester's department from their user data
+      // For now, showing all requests for managers
+      return req.status === 'pending' || req.approvedBy === `${user.firstName} ${user.lastName}`;
+    });
+  }
+  // HR and Admin see all requests
 
   const canApprove = user.role === 'manager' || user.role === 'hr' || user.role === 'admin';
+  const canReply = user.role === 'manager' || user.role === 'hr';
 
   if (showForm) {
     return (
@@ -66,7 +119,12 @@ export function LeaveRequestsList() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Leave Requests</h1>
           <p className="text-gray-600">
-            {user.role === 'employee' ? 'Manage your leave requests' : 'Review and approve leave requests'}
+            {user.role === 'employee' 
+              ? 'Manage your leave requests' 
+              : user.role === 'manager' 
+              ? 'Review and manage team leave requests'
+              : 'Review and approve leave requests'
+            }
           </p>
         </div>
         {user.role === 'employee' && (
@@ -126,22 +184,85 @@ export function LeaveRequestsList() {
                   )}
                 </div>
 
-                {canApprove && request.status === 'pending' && (
-                  <div className="flex gap-2 pt-3 border-t">
+                {/* Replies Section */}
+                {request.replies && request.replies.length > 0 && (
+                  <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+                    <h4 className="font-medium text-sm text-gray-700 mb-2">Manager Comments:</h4>
+                    {request.replies.map((reply) => (
+                      <div key={reply.id} className="text-sm">
+                        <p className="text-gray-600">{reply.message}</p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {reply.from} • {new Date(reply.timestamp).toLocaleDateString()}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Action Buttons */}
+                <div className="flex gap-2 pt-3 border-t">
+                  {canApprove && request.status === 'pending' && (
+                    <>
+                      <Button 
+                        size="sm" 
+                        onClick={() => handleApproveRequest(request.id)}
+                        className="bg-green-600 hover:bg-green-700"
+                      >
+                        Approve
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="destructive"
+                        onClick={() => handleRejectRequest(request.id)}
+                      >
+                        Reject
+                      </Button>
+                    </>
+                  )}
+                  
+                  {canReply && (
                     <Button 
                       size="sm" 
-                      onClick={() => handleApproveRequest(request.id)}
-                      className="bg-green-600 hover:bg-green-700"
+                      variant="outline"
+                      onClick={() => setReplyingTo(replyingTo === request.id ? null : request.id)}
+                      className="flex items-center gap-1"
                     >
-                      Approve
+                      <MessageSquare className="h-3 w-3" />
+                      Reply
                     </Button>
-                    <Button 
-                      size="sm" 
-                      variant="destructive"
-                      onClick={() => handleRejectRequest(request.id)}
-                    >
-                      Reject
-                    </Button>
+                  )}
+                </div>
+
+                {/* Reply Form */}
+                {replyingTo === request.id && (
+                  <div className="mt-3 p-3 bg-blue-50 rounded-lg">
+                    <Textarea
+                      placeholder="Write a reply to the employee..."
+                      value={replyText}
+                      onChange={(e) => setReplyText(e.target.value)}
+                      className="mb-2"
+                    />
+                    <div className="flex gap-2">
+                      <Button 
+                        size="sm" 
+                        onClick={() => handleSendReply(request.id)}
+                        disabled={!replyText.trim()}
+                        className="flex items-center gap-1"
+                      >
+                        <Send className="h-3 w-3" />
+                        Send
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        onClick={() => {
+                          setReplyingTo(null);
+                          setReplyText('');
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
                   </div>
                 )}
               </div>

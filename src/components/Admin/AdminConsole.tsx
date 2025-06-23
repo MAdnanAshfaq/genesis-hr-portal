@@ -6,6 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { CreateUserForm } from './CreateUserForm';
+import { EditUserForm } from './EditUserForm';
+import { useToast } from '@/hooks/use-toast';
 import { 
   Users, 
   Plus, 
@@ -31,7 +33,9 @@ import {
 
 export function AdminConsole() {
   const { getAllUsers, deleteUser } = useAuth();
+  const { toast } = useToast();
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [editingUser, setEditingUser] = useState<any>(null);
   const [users, setUsers] = useState(getAllUsers());
 
   const handleUserCreated = () => {
@@ -39,14 +43,27 @@ export function AdminConsole() {
     setShowCreateForm(false);
   };
 
+  const handleUserUpdated = () => {
+    setUsers(getAllUsers());
+    setEditingUser(null);
+  };
+
   const handleDeleteUser = async (userId: string) => {
     await deleteUser(userId);
     setUsers(getAllUsers());
+    toast({
+      title: "User Deleted",
+      description: "User has been successfully deleted.",
+    });
   };
 
   const copyCredentials = (username: string) => {
     const credentials = `Username: ${username}\nPassword: Genesis@123sword`;
     navigator.clipboard.writeText(credentials);
+    toast({
+      title: "Credentials Copied",
+      description: "Login credentials have been copied to clipboard.",
+    });
   };
 
   const getRoleBadgeVariant = (role: string) => {
@@ -74,6 +91,18 @@ export function AdminConsole() {
         <CreateUserForm
           onSuccess={handleUserCreated}
           onCancel={() => setShowCreateForm(false)}
+        />
+      </div>
+    );
+  }
+
+  if (editingUser) {
+    return (
+      <div className="p-6">
+        <EditUserForm
+          user={editingUser}
+          onSuccess={handleUserUpdated}
+          onCancel={() => setEditingUser(null)}
         />
       </div>
     );
@@ -214,7 +243,11 @@ export function AdminConsole() {
                       Copy Credentials
                     </Button>
                     
-                    <Button variant="outline" size="sm">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setEditingUser(user)}
+                    >
                       <Edit className="h-4 w-4" />
                     </Button>
                     

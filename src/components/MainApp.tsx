@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Header } from './Layout/Header';
@@ -8,6 +9,7 @@ import { UserManagementView } from './UserManagement/UserManagementView';
 import { AnnouncementsView } from './Announcements/AnnouncementsView';
 import { ProfileView } from './Profile/ProfileView';
 import { AdminConsole } from './Admin/AdminConsole';
+import { Toaster } from '@/components/ui/toaster';
 
 export function MainApp() {
   const { user, isLoading } = useAuth();
@@ -80,6 +82,7 @@ export function MainApp() {
           {renderContent()}
         </main>
       </div>
+      <Toaster />
     </div>
   );
 }
