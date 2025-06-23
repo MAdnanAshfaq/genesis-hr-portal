@@ -12,6 +12,14 @@ export interface LeaveRequest {
   submittedDate: string;
   approvedBy?: string;
   approvedDate?: string;
+  replies?: Reply[];
+}
+
+export interface Reply {
+  id: string;
+  message: string;
+  from: string;
+  timestamp: string;
 }
 
 export interface LeaveBalance {
