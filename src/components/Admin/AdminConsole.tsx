@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { CreateUserForm } from './CreateUserForm';
 import { EditUserForm } from './EditUserForm';
 import { useToast } from '@/hooks/use-toast';
+import { User } from '@/types/auth';
 import { 
   Users, 
   Plus, 
@@ -36,21 +37,33 @@ export function AdminConsole() {
   const { toast } = useToast();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingUser, setEditingUser] = useState<any>(null);
-  const [users, setUsers] = useState(getAllUsers());
+  const [users, setUsers] = useState<User[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const handleUserCreated = () => {
-    setUsers(getAllUsers());
+  const loadUsers = async () => {
+    setIsLoading(true);
+    const allUsers = await getAllUsers();
+    setUsers(allUsers);
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    loadUsers();
+  }, []);
+
+  const handleUserCreated = async () => {
+    await loadUsers();
     setShowCreateForm(false);
   };
 
-  const handleUserUpdated = () => {
-    setUsers(getAllUsers());
+  const handleUserUpdated = async () => {
+    await loadUsers();
     setEditingUser(null);
   };
 
   const handleDeleteUser = async (userId: string) => {
     await deleteUser(userId);
-    setUsers(getAllUsers());
+    await loadUsers();
     toast({
       title: "User Deleted",
       description: "User has been successfully deleted.",
@@ -104,6 +117,17 @@ export function AdminConsole() {
           onSuccess={handleUserUpdated}
           onCancel={() => setEditingUser(null)}
         />
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="p-6 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-2 text-gray-600">Loading users...</p>
+        </div>
       </div>
     );
   }
