@@ -6,56 +6,82 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Hand } from 'lucide-react';
 
 export function LoginForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showHand, setShowHand] = useState(false);
+  const [slideOut, setSlideOut] = useState(false);
   const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
+    setShowHand(true);
+
+    // Show hand animation for 1 second
+    setTimeout(() => {
+      setSlideOut(true);
+    }, 1000);
 
     try {
       const success = await login({ username, password });
       if (!success) {
         setError('Invalid username or password');
+        setShowHand(false);
+        setSlideOut(false);
       }
     } catch (err) {
       setError('An error occurred during login');
+      setShowHand(false);
+      setSlideOut(false);
     } finally {
-      setIsLoading(false);
+      if (!slideOut) {
+        setIsLoading(false);
+      }
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-genesis-50 to-genesis-100">
-      <div className="w-full max-w-md space-y-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 via-pink-600/20 to-blue-600/20 animate-pulse"></div>
+      <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-purple-500/30 rounded-full blur-3xl animate-pulse"></div>
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/30 rounded-full blur-3xl animate-pulse delay-1000"></div>
+      
+      {/* Hand animation */}
+      {showHand && (
+        <div className={`fixed inset-0 z-50 flex items-center justify-center pointer-events-none transition-all duration-1000 ${slideOut ? 'transform -translate-x-full' : ''}`}>
+          <Hand className="w-32 h-32 text-white animate-bounce" />
+        </div>
+      )}
+
+      <div className={`w-full max-w-md space-y-8 transition-all duration-1000 transform ${slideOut ? '-translate-x-full opacity-0' : 'translate-x-0 opacity-100'} cursor-none`}>
         <div className="text-center">
           <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 bg-primary rounded-xl flex items-center justify-center">
+            <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl flex items-center justify-center shadow-2xl transform hover:scale-110 transition-transform duration-300 hover:shadow-purple-500/50">
               <span className="text-white font-bold text-2xl">G</span>
             </div>
           </div>
-          <h2 className="text-3xl font-bold text-gray-900">Welcome to GenesisHR</h2>
-          <p className="text-gray-600 mt-2">Sign in to your account</p>
+          <h2 className="text-4xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">Welcome to GenesisHR</h2>
+          <p className="text-purple-200 mt-2 text-lg">Enter the future of workforce management</p>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Sign In</CardTitle>
-            <CardDescription>
-              Enter your credentials to access your dashboard
+        <Card className="backdrop-blur-md bg-white/10 border-purple-500/30 shadow-2xl hover:shadow-purple-500/20 transition-all duration-300 transform hover:scale-105">
+          <CardHeader className="text-center">
+            <CardTitle className="text-white text-2xl">Portal Access</CardTitle>
+            <CardDescription className="text-purple-200">
+              Authenticate to enter your digital workspace
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="username">Username</Label>
+                <Label htmlFor="username" className="text-purple-200 text-lg">Username</Label>
                 <Input
                   id="username"
                   type="text"
@@ -63,10 +89,11 @@ export function LoginForm() {
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="Enter your username"
                   required
+                  className="bg-white/20 border-purple-400/50 text-white placeholder-purple-300 focus:border-purple-300 focus:ring-purple-300/50 h-12 text-lg"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password" className="text-purple-200 text-lg">Password</Label>
                 <Input
                   id="password"
                   type="password"
@@ -74,36 +101,37 @@ export function LoginForm() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
                   required
+                  className="bg-white/20 border-purple-400/50 text-white placeholder-purple-300 focus:border-purple-300 focus:ring-purple-300/50 h-12 text-lg"
                 />
               </div>
 
               {error && (
-                <Alert variant="destructive">
-                  <AlertDescription>{error}</AlertDescription>
+                <Alert variant="destructive" className="bg-red-500/20 border-red-400/50 animate-shake">
+                  <AlertDescription className="text-red-300">{error}</AlertDescription>
                 </Alert>
               )}
 
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Sign In
+              <Button 
+                type="submit" 
+                className="w-full h-12 text-lg bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 transform hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-purple-500/50" 
+                disabled={isLoading}
+              >
+                {isLoading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
+                {isLoading ? 'Accessing Portal...' : 'Enter Portal'}
               </Button>
             </form>
-
-            <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-              <p className="text-sm font-medium text-gray-700 mb-2">Demo Accounts:</p>
-              <div className="space-y-1 text-xs text-gray-600">
-                <p><strong>Admin:</strong> admin</p>
-                <p><strong>HR:</strong> hr_sarah</p>
-                <p><strong>Sales Manager:</strong> manager_sales</p>
-                <p><strong>Production Manager:</strong> manager_production</p>
-                <p><strong>Sales Employee:</strong> emp_sales_1</p>
-                <p><strong>Production Employee:</strong> emp_production_1</p>
-                <p className="mt-2"><strong>Password:</strong> Genesis@123sword</p>
-              </div>
-            </div>
           </CardContent>
         </Card>
       </div>
+
+      {/* Portal effect when signed in */}
+      {slideOut && (
+        <div className="fixed inset-0 z-40 flex items-center justify-center">
+          <div className="w-96 h-96 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 rounded-full animate-ping opacity-75"></div>
+          <div className="absolute w-64 h-64 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-full animate-pulse"></div>
+          <div className="absolute w-32 h-32 bg-white rounded-full animate-spin"></div>
+        </div>
+      )}
     </div>
   );
 }
