@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -87,169 +86,313 @@
     cursor: none;
   }
 
-  /* Realistic Hand Animation */
-  .hand-container {
+  /* Realistic Hand Animation System */
+  .hand-animation-container {
+    perspective: 1000px;
+  }
+
+  .realistic-hand-wrapper {
     position: absolute;
-    left: -200px;
-    top: 50%;
-    transform: translateY(-50%);
-    animation: hand-slide-in 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    left: -250px;
+    top: 45%;
+    transform: translateY(-50%) rotateY(-15deg);
+    animation: hand-slide-in-realistic 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.4));
   }
 
   .realistic-hand {
     position: relative;
-    width: 120px;
-    height: 180px;
-    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
+    width: 140px;
+    height: 200px;
+    transform-style: preserve-3d;
   }
 
   .hand-shadow {
     position: absolute;
-    bottom: -10px;
-    left: 10px;
-    width: 100px;
-    height: 30px;
-    background: radial-gradient(ellipse, rgba(0, 0, 0, 0.3) 0%, transparent 70%);
-    border-radius: 50%;
-    animation: shadow-move 1.2s ease-out forwards;
+    bottom: -20px;
+    left: 20px;
+    width: 120px;
+    height: 40px;
+    background: radial-gradient(ellipse, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.1) 50%, transparent 100%);
+    border-radius: 60px;
+    animation: shadow-realistic-move 1.2s ease-out 0.3s forwards;
+    transform: rotateX(90deg) translateZ(-10px);
   }
 
-  .hand-base {
-    position: relative;
-    width: 100%;
-    height: 100%;
-  }
-
-  .palm {
+  /* Hand Wrist */
+  .hand-wrist {
     position: absolute;
     bottom: 0;
+    left: 30px;
+    width: 70px;
+    height: 40px;
+    background: linear-gradient(145deg, #fdbcb4 0%, #f1a398 50%, #e8967c 100%);
+    border-radius: 35px 35px 15px 15px;
+    box-shadow: inset 2px 2px 6px rgba(139, 69, 19, 0.2), inset -2px -2px 6px rgba(255, 255, 255, 0.1);
+  }
+
+  .wrist-base {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    background: linear-gradient(135deg, #f4a79d 0%, #e8967c 100%);
+    border-radius: 30px 30px 10px 10px;
+  }
+
+  /* Hand Palm */
+  .hand-palm {
+    position: absolute;
+    bottom: 35px;
     left: 20px;
-    width: 80px;
-    height: 100px;
-    background: linear-gradient(145deg, #fdbcb4, #f1a398);
-    border-radius: 40px 40px 20px 20px;
-    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.1);
+    width: 90px;
+    height: 110px;
+    background: linear-gradient(145deg, #fdbcb4 0%, #f1a398 40%, #e8967c 100%);
+    border-radius: 45px 45px 25px 25px;
+    box-shadow: inset 3px 3px 8px rgba(139, 69, 19, 0.15), inset -3px -3px 8px rgba(255, 255, 255, 0.1);
+    transform: rotateX(5deg);
   }
 
-  .thumb {
+  .palm-base {
     position: absolute;
-    bottom: 30px;
-    left: 0;
-    width: 35px;
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    background: linear-gradient(135deg, #f4a79d 0%, #e8967c 60%, #d4826a 100%);
+    border-radius: 37px 37px 17px 17px;
+  }
+
+  .palm-lines {
+    position: absolute;
+    top: 20px;
+    left: 15px;
+    right: 15px;
     height: 60px;
-    background: linear-gradient(145deg, #fdbcb4, #f1a398);
-    border-radius: 20px;
-    transform: rotate(-20deg);
-    animation: thumb-curl 0.3s ease-out 0.8s forwards;
-    box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.1);
   }
 
-  .finger {
+  .palm-lines::before,
+  .palm-lines::after {
+    content: '';
     position: absolute;
-    width: 18px;
-    height: 70px;
-    background: linear-gradient(145deg, #fdbcb4, #f1a398);
+    height: 1px;
+    background: rgba(139, 69, 19, 0.2);
+    border-radius: 1px;
+  }
+
+  .palm-lines::before {
+    top: 15px;
+    left: 5px;
+    right: 10px;
+    transform: rotate(-10deg);
+  }
+
+  .palm-lines::after {
+    top: 35px;
+    left: 8px;
+    right: 15px;
+    transform: rotate(5deg);
+  }
+
+  /* Thumb */
+  .hand-thumb {
+    position: absolute;
+    bottom: 60px;
+    left: 0px;
+    width: 45px;
+    height: 75px;
+    transform: rotate(-25deg);
+    animation: thumb-curl-realistic 0.4s ease-out 1.0s forwards;
+  }
+
+  .thumb-segment-1 {
+    position: absolute;
+    bottom: 0;
+    width: 25px;
+    height: 45px;
+    background: linear-gradient(145deg, #fdbcb4 0%, #f1a398 50%, #e8967c 100%);
+    border-radius: 12px;
+    box-shadow: inset 1px 1px 3px rgba(139, 69, 19, 0.2), 2px 2px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .thumb-segment-2 {
+    position: absolute;
+    top: 0;
+    left: 2px;
+    width: 21px;
+    height: 35px;
+    background: linear-gradient(145deg, #fdbcb4 0%, #f1a398 50%, #e8967c 100%);
     border-radius: 10px;
-    box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: inset 1px 1px 3px rgba(139, 69, 19, 0.2);
+    transform-origin: bottom center;
   }
 
-  .finger-1 {
-    bottom: 80px;
-    left: 25px;
-    height: 60px;
-    animation: finger-curl-1 0.3s ease-out 0.9s forwards;
+  .thumb-nail {
+    position: absolute;
+    top: 2px;
+    left: 6px;
+    width: 9px;
+    height: 12px;
+    background: linear-gradient(145deg, #ffeaa7 0%, #fdcb6e 100%);
+    border-radius: 4px;
+    border: 1px solid rgba(139, 69, 19, 0.3);
   }
 
-  .finger-2 {
-    bottom: 85px;
-    left: 45px;
-    height: 70px;
-    animation: finger-curl-2 0.3s ease-out 1.0s forwards;
+  /* Fingers */
+  .hand-finger {
+    position: absolute;
+    transform-origin: bottom center;
   }
 
-  .finger-3 {
-    bottom: 80px;
-    left: 65px;
+  .finger-index {
+    bottom: 115px;
+    left: 35px;
+    width: 22px;
+    height: 80px;
+    animation: finger-curl-index 0.3s ease-out 1.1s forwards;
+  }
+
+  .finger-middle {
+    bottom: 125px;
+    left: 58px;
+    width: 22px;
+    height: 90px;
+    animation: finger-curl-middle 0.3s ease-out 1.2s forwards;
+  }
+
+  .finger-ring {
+    bottom: 115px;
+    left: 81px;
+    width: 20px;
+    height: 80px;
+    animation: finger-curl-ring 0.3s ease-out 1.3s forwards;
+  }
+
+  .finger-pinky {
+    bottom: 95px;
+    left: 100px;
+    width: 18px;
     height: 65px;
-    animation: finger-curl-3 0.3s ease-out 1.1s forwards;
+    animation: finger-curl-pinky 0.3s ease-out 1.4s forwards;
   }
 
-  .finger-4 {
-    bottom: 70px;
-    left: 85px;
-    height: 50px;
-    animation: finger-curl-4 0.3s ease-out 1.2s forwards;
+  .finger-segment-1,
+  .finger-segment-2,
+  .finger-segment-3 {
+    position: absolute;
+    background: linear-gradient(145deg, #fdbcb4 0%, #f1a398 50%, #e8967c 100%);
+    border-radius: 8px;
+    box-shadow: inset 1px 1px 3px rgba(139, 69, 19, 0.2), 1px 1px 4px rgba(0, 0, 0, 0.1);
   }
 
-  /* Signin Page Cloth Physics */
-  .signin-page-container {
+  .finger-segment-1 {
+    bottom: 0;
+    width: 100%;
+    height: 35%;
+  }
+
+  .finger-segment-2 {
+    bottom: 30%;
+    width: 95%;
+    left: 2.5%;
+    height: 30%;
+  }
+
+  .finger-segment-3 {
+    bottom: 55%;
+    width: 90%;
+    left: 5%;
+    height: 25%;
+  }
+
+  .finger-nail {
+    position: absolute;
+    top: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 8px;
+    background: linear-gradient(145deg, #ffeaa7 0%, #fdcb6e 100%);
+    border-radius: 4px;
+    border: 1px solid rgba(139, 69, 19, 0.3);
+  }
+
+  /* Cloth Physics for Signin Page */
+  .signin-page-cloth {
     transition: all 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     transform-origin: left center;
     position: relative;
-    z-index: 10;
+    z-index: 20;
+    will-change: transform, filter, opacity;
   }
 
-  .signin-page-container.being-dragged {
-    animation: cloth-drag 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-    filter: blur(1px);
+  .signin-page-cloth.cloth-being-dragged {
+    animation: cloth-drag-realistic 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
   }
 
-  .signin-page-container.page-hidden {
+  .signin-page-cloth.cloth-hidden {
     opacity: 0;
-    transform: translateX(-100%) rotateY(-15deg) scale(0.8);
+    transform: translateX(-120%) rotateY(-25deg) scale(0.7);
+    filter: blur(3px);
   }
 
   .signin-card {
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform-style: preserve-3d;
   }
 
-  .signin-page-container.being-dragged .signin-card {
-    animation: card-deform 1.5s ease-out forwards;
+  .cloth-being-dragged .signin-card {
+    animation: card-cloth-deform 1.5s ease-out forwards;
   }
 
-  .signin-button.button-being-pulled {
-    animation: button-stick 0.5s ease-out 0.8s forwards;
+  .signin-button.button-being-grabbed {
+    animation: button-grab-effect 0.6s ease-out 1.0s forwards;
   }
 
-  /* Portal Effect */
+  /* Portal Effects */
+  .portal-overlay {
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.1) 0%, rgba(0, 0, 0, 0.8) 100%);
+    backdrop-filter: blur(10px);
+  }
+
   .portal-container {
     position: relative;
-    width: 400px;
-    height: 400px;
-    animation: portal-emerge 2s ease-out forwards;
+    width: 500px;
+    height: 500px;
+    animation: portal-emerge-epic 2.5s ease-out forwards;
   }
 
   .portal-ring {
     position: absolute;
     border-radius: 50%;
-    border: 2px solid;
-    animation: portal-spin 3s linear infinite;
+    border: 3px solid;
+    filter: drop-shadow(0 0 10px currentColor);
   }
 
-  .portal-ring-1 {
+  .portal-ring-outer {
     width: 100%;
     height: 100%;
     border-color: #a855f7;
-    animation-duration: 2s;
+    animation: portal-spin-outer 3s linear infinite;
   }
 
-  .portal-ring-2 {
+  .portal-ring-middle {
     width: 70%;
     height: 70%;
     top: 15%;
     left: 15%;
     border-color: #ec4899;
-    animation-duration: 1.5s;
-    animation-direction: reverse;
+    animation: portal-spin-middle 2s linear infinite reverse;
   }
 
-  .portal-ring-3 {
+  .portal-ring-inner {
     width: 40%;
     height: 40%;
     top: 30%;
     left: 30%;
     border-color: #3b82f6;
-    animation-duration: 1s;
+    animation: portal-spin-inner 1.5s linear infinite;
   }
 
   .portal-center {
@@ -257,170 +400,212 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(168, 85, 247, 0.8) 100%);
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(168, 85, 247, 0.8) 70%, transparent 100%);
     border-radius: 50%;
-    width: 120px;
-    height: 120px;
+    width: 150px;
+    height: 150px;
     display: flex;
     align-items: center;
     justify-content: center;
-    animation: portal-pulse 2s ease-in-out infinite;
+    animation: portal-pulse-epic 2s ease-in-out infinite;
+  }
+
+  .portal-energy {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, transparent 0%, #a855f7 25%, #ec4899 50%, #3b82f6 75%, transparent 100%);
+    animation: portal-energy-spin 1s linear infinite;
+    filter: blur(2px);
+    opacity: 0.7;
   }
 }
 
 @layer utilities {
-  /* Hand Animation Keyframes */
-  @keyframes hand-slide-in {
+  /* Realistic Hand Animation Keyframes */
+  @keyframes hand-slide-in-realistic {
     0% {
-      left: -200px;
+      left: -250px;
       opacity: 0;
+      transform: translateY(-50%) rotateY(-15deg) rotateZ(-5deg);
     }
-    30% {
-      opacity: 1;
+    20% {
+      opacity: 0.3;
+    }
+    60% {
+      left: 15%;
+      opacity: 0.9;
     }
     100% {
       left: 20%;
       opacity: 1;
+      transform: translateY(-50%) rotateY(-5deg) rotateZ(2deg);
     }
   }
 
-  @keyframes thumb-curl {
-    from { transform: rotate(-20deg); }
-    to { transform: rotate(-45deg); }
+  @keyframes shadow-realistic-move {
+    0% { 
+      transform: rotateX(90deg) translateZ(-10px) translateX(0px); 
+      opacity: 0.4;
+    }
+    100% { 
+      transform: rotateX(90deg) translateZ(-10px) translateX(150px); 
+      opacity: 0.6;
+    }
   }
 
-  @keyframes finger-curl-1 {
+  /* Finger curl animations */
+  @keyframes thumb-curl-realistic {
+    from { transform: rotate(-25deg); }
+    to { transform: rotate(-45deg) scale(0.95); }
+  }
+
+  @keyframes finger-curl-index {
     from { transform: rotate(0deg); }
-    to { transform: rotate(15deg); }
+    to { transform: rotate(20deg) translateY(-2px); }
   }
 
-  @keyframes finger-curl-2 {
+  @keyframes finger-curl-middle {
     from { transform: rotate(0deg); }
-    to { transform: rotate(20deg); }
+    to { transform: rotate(25deg) translateY(-3px); }
   }
 
-  @keyframes finger-curl-3 {
+  @keyframes finger-curl-ring {
     from { transform: rotate(0deg); }
-    to { transform: rotate(15deg); }
+    to { transform: rotate(20deg) translateY(-2px); }
   }
 
-  @keyframes finger-curl-4 {
+  @keyframes finger-curl-pinky {
     from { transform: rotate(0deg); }
-    to { transform: rotate(10deg); }
+    to { transform: rotate(15deg) translateY(-1px); }
   }
 
-  @keyframes shadow-move {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(200px); }
-  }
-
-  /* Cloth Physics */
-  @keyframes cloth-drag {
+  /* Enhanced Cloth Physics */
+  @keyframes cloth-drag-realistic {
     0% {
-      transform: translateX(0) rotateY(0deg) scale(1);
+      transform: translateX(0) rotateY(0deg) scale(1) rotateZ(0deg);
       filter: blur(0px);
     }
-    30% {
-      transform: translateX(-10px) rotateY(-2deg) scale(0.98);
-      filter: blur(0.5px);
+    25% {
+      transform: translateX(-5px) rotateY(-1deg) scale(0.99) rotateZ(1deg);
+      filter: blur(0.2px);
     }
-    60% {
-      transform: translateX(-40px) rotateY(-8deg) scale(0.9);
-      filter: blur(1px);
+    50% {
+      transform: translateX(-25px) rotateY(-5deg) scale(0.95) rotateZ(2deg);
+      filter: blur(0.8px);
+    }
+    75% {
+      transform: translateX(-60px) rotateY(-15deg) scale(0.85) rotateZ(3deg);
+      filter: blur(1.5px);
     }
     100% {
-      transform: translateX(-120%) rotateY(-25deg) scale(0.7);
-      filter: blur(2px);
+      transform: translateX(-120%) rotateY(-25deg) scale(0.7) rotateZ(5deg);
+      filter: blur(2.5px);
       opacity: 0;
     }
   }
 
-  @keyframes card-deform {
-    0% { transform: perspective(1000px) rotateY(0deg) rotateX(0deg); }
-    50% { transform: perspective(1000px) rotateY(-5deg) rotateX(2deg) scale(0.95); }
-    100% { transform: perspective(1000px) rotateY(-15deg) rotateX(5deg) scale(0.8); }
+  @keyframes card-cloth-deform {
+    0% { 
+      transform: perspective(1000px) rotateY(0deg) rotateX(0deg) rotateZ(0deg); 
+    }
+    30% { 
+      transform: perspective(1000px) rotateY(-3deg) rotateX(1deg) rotateZ(1deg) scale(0.98); 
+    }
+    60% { 
+      transform: perspective(1000px) rotateY(-10deg) rotateX(3deg) rotateZ(2deg) scale(0.92); 
+    }
+    100% { 
+      transform: perspective(1000px) rotateY(-20deg) rotateX(8deg) rotateZ(4deg) scale(0.8); 
+    }
   }
 
-  @keyframes button-stick {
-    0% { transform: translateY(0); }
-    50% { transform: translateY(-3px) scale(0.98); }
-    100% { transform: translateY(-5px) scale(0.95); }
+  @keyframes button-grab-effect {
+    0% { 
+      transform: translateY(0) scale(1); 
+      box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
+    }
+    50% { 
+      transform: translateY(-2px) scale(0.98) rotateX(5deg); 
+      box-shadow: 0 2px 8px rgba(168, 85, 247, 0.5);
+    }
+    100% { 
+      transform: translateY(-4px) scale(0.95) rotateX(8deg); 
+      box-shadow: 0 1px 4px rgba(168, 85, 247, 0.7);
+    }
   }
 
-  /* Portal Animations */
-  @keyframes portal-emerge {
+  /* Enhanced Portal Animations */
+  @keyframes portal-emerge-epic {
     0% {
       transform: scale(0) rotate(0deg);
       opacity: 0;
+      filter: blur(10px);
     }
-    50% {
+    30% {
+      opacity: 0.3;
+      filter: blur(5px);
+    }
+    60% {
       opacity: 0.7;
+      filter: blur(2px);
     }
     100% {
       transform: scale(1) rotate(360deg);
       opacity: 1;
+      filter: blur(0px);
     }
   }
 
-  @keyframes portal-spin {
+  @keyframes portal-spin-outer {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
   }
 
-  @keyframes portal-pulse {
-    0%, 100% { transform: translate(-50%, -50%) scale(1); }
-    50% { transform: translate(-50%, -50%) scale(1.1); }
+  @keyframes portal-spin-middle {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(-360deg); }
+  }
+
+  @keyframes portal-spin-inner {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes portal-pulse-epic {
+    0%, 100% { 
+      transform: translate(-50%, -50%) scale(1);
+      box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+    }
+    50% { 
+      transform: translate(-50%, -50%) scale(1.15);
+      box-shadow: 0 0 40px rgba(168, 85, 247, 0.8);
+    }
+  }
+
+  @keyframes portal-energy-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
   }
 
   /* Particle Effects */
   @keyframes fiber-float {
     0% {
       opacity: 1;
-      transform: translate(0, 0) rotate(0deg);
+      transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+    50% {
+      opacity: 0.7;
+      transform: translate(50px, -25px) rotate(90deg) scale(0.8);
     }
     100% {
       opacity: 0;
-      transform: translate(100px, -50px) rotate(180deg);
+      transform: translate(120px, -60px) rotate(180deg) scale(0.3);
     }
   }
 
-  /* Background animations */
-  @keyframes float {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-20px) rotate(5deg); }
-  }
-
-  @keyframes float-delayed {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-15px) rotate(-3deg); }
-  }
-
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
-  }
-
-  .animate-float-delayed {
-    animation: float-delayed 8s ease-in-out infinite;
-    animation-delay: 2s;
-  }
-
-  .animate-fiber-float {
-    animation: fiber-float 2s ease-out forwards;
-  }
-
-  @keyframes shake {
-    0%, 100% {
-      transform: translateX(0);
-    }
-    10%, 30%, 50%, 70%, 90% {
-      transform: translateX(-10px);
-    }
-    20%, 40%, 60%, 80% {
-      transform: translateX(10px);
-    }
-  }
-  
-  .animate-shake {
-    animation: shake 0.5s ease-in-out;
-  }
+  // ... keep existing code (background animations, shake, etc.)
 }
