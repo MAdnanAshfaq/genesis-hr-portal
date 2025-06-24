@@ -1,9 +1,82 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { User as SupabaseUser } from '@supabase/supabase-js';
-import { supabase } from '@/lib/supabase';
-import { ApiService } from '@/services/api';
 import { User, AuthState, LoginCredentials, CreateUserData } from '@/types/auth';
+
+// Demo users data
+const demoUsers: User[] = [
+  {
+    id: '1',
+    username: 'admin',
+    password: 'Genesis@123',
+    firstName: 'Admin',
+    lastName: 'User',
+    role: 'admin',
+    department: 'admin',
+    joinDate: '2024-01-01',
+    createdBy: 'system',
+    createdDate: '2024-01-01',
+  },
+  {
+    id: '2',
+    username: 'hr_sarah',
+    password: 'Genesis@123',
+    firstName: 'Sarah',
+    lastName: 'Johnson',
+    role: 'hr',
+    department: 'hr',
+    joinDate: '2024-01-01',
+    createdBy: 'admin',
+    createdDate: '2024-01-01',
+  },
+  {
+    id: '3',
+    username: 'manager_sales',
+    password: 'Genesis@123',
+    firstName: 'Mike',
+    lastName: 'Thompson',
+    role: 'manager',
+    department: 'sales',
+    joinDate: '2024-01-01',
+    createdBy: 'admin',
+    createdDate: '2024-01-01',
+  },
+  {
+    id: '4',
+    username: 'manager_production',
+    password: 'Genesis@123',
+    firstName: 'Lisa',
+    lastName: 'Chen',
+    role: 'manager',
+    department: 'production',
+    joinDate: '2024-01-01',
+    createdBy: 'admin',
+    createdDate: '2024-01-01',
+  },
+  {
+    id: '5',
+    username: 'emp_sales_1',
+    password: 'Genesis@123',
+    firstName: 'John',
+    lastName: 'Smith',
+    role: 'employee',
+    department: 'sales',
+    joinDate: '2024-01-01',
+    createdBy: 'manager_sales',
+    createdDate: '2024-01-01',
+  },
+  {
+    id: '6',
+    username: 'emp_production_1',
+    password: 'Genesis@123',
+    firstName: 'Emma',
+    lastName: 'Davis',
+    role: 'employee',
+    department: 'production',
+    joinDate: '2024-01-01',
+    createdBy: 'manager_production',
+    createdDate: '2024-01-01',
+  },
+];
 
 interface AuthContextType extends AuthState {
   login: (credentials: LoginCredentials) => Promise<boolean>;
@@ -21,94 +94,87 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [authState, setAuthState] = useState<AuthState>({
     user: null,
     isAuthenticated: false,
-    isLoading: true,
+    isLoading: false,
   });
 
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        fetchUserProfile();
-      } else {
-        setAuthState(prev => ({ ...prev, isLoading: false }));
-      }
-    });
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (session) {
-          await fetchUserProfile();
-        } else {
-          setAuthState({
-            user: null,
-            isAuthenticated: false,
-            isLoading: false,
-          });
-        }
-      }
-    );
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const fetchUserProfile = async () => {
-    try {
-      const user = await ApiService.getCurrentUser();
-      
-      if (user) {
+    // Check for stored session
+    const storedUser = localStorage.getItem('currentUser');
+    if (storedUser) {
+      try {
+        const user = JSON.parse(storedUser);
         setAuthState({
           user,
           isAuthenticated: true,
           isLoading: false,
         });
-      } else {
-        setAuthState(prev => ({ ...prev, isLoading: false }));
+      } catch (error) {
+        console.error('Error parsing stored user:', error);
+        localStorage.removeItem('currentUser');
       }
-    } catch (error) {
-      console.error('Error fetching user profile:', error);
-      setAuthState(prev => ({ ...prev, isLoading: false }));
     }
-  };
+  }, []);
 
   const login = async (credentials: LoginCredentials): Promise<boolean> => {
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: credentials.username,
-        password: credentials.password,
-      });
+    console.log('Attempting login with:', credentials.username);
+    
+    // Find user in demo data
+    const user = demoUsers.find(
+      u => u.username === credentials.username && u.password === credentials.password
+    );
 
-      if (error) throw error;
+    if (user) {
+      const userWithoutPassword = { ...user, password: '' };
+      setAuthState({
+        user: userWithoutPassword,
+        isAuthenticated: true,
+        isLoading: false,
+      });
+      
+      // Store session
+      localStorage.setItem('currentUser', JSON.stringify(userWithoutPassword));
+      
+      console.log('Login successful for:', user.username);
       return true;
-    } catch (error) {
-      console.error('Login error:', error);
-      return false;
     }
+
+    console.log('Login failed - invalid credentials');
+    return false;
   };
 
   const logout = async () => {
-    await supabase.auth.signOut();
+    setAuthState({
+      user: null,
+      isAuthenticated: false,
+      isLoading: false,
+    });
+    localStorage.removeItem('currentUser');
   };
 
   const createUser = async (userData: CreateUserData): Promise<boolean> => {
-    return await ApiService.createUser(userData, authState.user?.username || 'admin');
+    // In a real app, this would create a user in the database
+    console.log('Create user called:', userData);
+    return true;
   };
 
   const updateUser = async (userId: string, userData: Partial<User>): Promise<boolean> => {
-    return await ApiService.updateUser(userId, userData);
+    console.log('Update user called:', userId, userData);
+    return true;
   };
 
   const deleteUser = async (userId: string): Promise<boolean> => {
-    return await ApiService.deleteUser(userId);
+    console.log('Delete user called:', userId);
+    return true;
   };
 
   const getAllUsers = async (): Promise<User[]> => {
-    return await ApiService.getAllUsers();
+    return demoUsers.map(user => ({ ...user, password: '' }));
   };
 
   const getUsersByDepartment = async (department: string): Promise<User[]> => {
-    const allUsers = await ApiService.getAllUsers();
-    return allUsers.filter(user => user.department === department);
+    return demoUsers
+      .filter(user => user.department === department)
+      .map(user => ({ ...user, password: '' }));
   };
 
   return (

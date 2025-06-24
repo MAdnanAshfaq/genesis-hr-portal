@@ -6,14 +6,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, Hand } from 'lucide-react';
+import { Loader2, Sparkles } from 'lucide-react';
 
 export function LoginForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [showHand, setShowHand] = useState(false);
+  const [showPortal, setShowPortal] = useState(false);
   const [slideOut, setSlideOut] = useState(false);
   const { login } = useAuth();
 
@@ -21,26 +21,24 @@ export function LoginForm() {
     e.preventDefault();
     setIsLoading(true);
     setError('');
-    setShowHand(true);
-
-    // Show hand animation for 1 second
-    setTimeout(() => {
-      setSlideOut(true);
-    }, 1000);
 
     try {
       const success = await login({ username, password });
-      if (!success) {
+      if (success) {
+        // Start portal animation
+        setShowPortal(true);
+        
+        // Slide out the form after a delay
+        setTimeout(() => {
+          setSlideOut(true);
+        }, 800);
+      } else {
         setError('Invalid username or password');
-        setShowHand(false);
-        setSlideOut(false);
       }
     } catch (err) {
       setError('An error occurred during login');
-      setShowHand(false);
-      setSlideOut(false);
     } finally {
-      if (!slideOut) {
+      if (!showPortal) {
         setIsLoading(false);
       }
     }
@@ -53,10 +51,15 @@ export function LoginForm() {
       <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-purple-500/30 rounded-full blur-3xl animate-pulse"></div>
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/30 rounded-full blur-3xl animate-pulse delay-1000"></div>
       
-      {/* Hand animation */}
-      {showHand && (
-        <div className={`fixed inset-0 z-50 flex items-center justify-center pointer-events-none transition-all duration-1000 ${slideOut ? 'transform -translate-x-full' : ''}`}>
-          <Hand className="w-32 h-32 text-white animate-bounce" />
+      {/* Portal effect */}
+      {showPortal && (
+        <div className="fixed inset-0 z-40 flex items-center justify-center">
+          <div className="w-96 h-96 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 rounded-full animate-ping opacity-75"></div>
+          <div className="absolute w-64 h-64 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-full animate-pulse"></div>
+          <div className="absolute w-32 h-32 bg-white rounded-full animate-spin"></div>
+          <div className="absolute flex items-center justify-center">
+            <Sparkles className="w-16 h-16 text-white animate-pulse" />
+          </div>
         </div>
       )}
 
@@ -122,16 +125,15 @@ export function LoginForm() {
             </form>
           </CardContent>
         </Card>
-      </div>
 
-      {/* Portal effect when signed in */}
-      {slideOut && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center">
-          <div className="w-96 h-96 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 rounded-full animate-ping opacity-75"></div>
-          <div className="absolute w-64 h-64 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-full animate-pulse"></div>
-          <div className="absolute w-32 h-32 bg-white rounded-full animate-spin"></div>
+        {/* Demo credentials info */}
+        <div className="text-center text-purple-300 text-sm">
+          <p className="mb-1">Demo Credentials:</p>
+          <p className="font-mono text-xs">admin / Genesis@123</p>
+          <p className="font-mono text-xs">hr_sarah / Genesis@123</p>
+          <p className="font-mono text-xs">manager_sales / Genesis@123</p>
         </div>
-      )}
+      </div>
     </div>
   );
 }
