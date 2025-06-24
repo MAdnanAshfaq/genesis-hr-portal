@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -115,14 +114,91 @@ export default {
 						opacity: '0'
 					}
 				},
-				'portal-spin': {
-					from: {
-						transform: 'rotate(0deg) scale(0)',
+				'hand-slide-in': {
+					'0%': {
+						left: '-200px',
 						opacity: '0'
 					},
-					to: {
-						transform: 'rotate(360deg) scale(1)',
+					'30%': {
 						opacity: '1'
+					},
+					'100%': {
+						left: '20%',
+						opacity: '1'
+					}
+				},
+				'cloth-drag': {
+					'0%': {
+						transform: 'translateX(0) rotateY(0deg) scale(1)',
+						filter: 'blur(0px)'
+					},
+					'30%': {
+						transform: 'translateX(-10px) rotateY(-2deg) scale(0.98)',
+						filter: 'blur(0.5px)'
+					},
+					'60%': {
+						transform: 'translateX(-40px) rotateY(-8deg) scale(0.9)',
+						filter: 'blur(1px)'
+					},
+					'100%': {
+						transform: 'translateX(-120%) rotateY(-25deg) scale(0.7)',
+						filter: 'blur(2px)',
+						opacity: '0'
+					}
+				},
+				'portal-emerge': {
+					'0%': {
+						transform: 'scale(0) rotate(0deg)',
+						opacity: '0'
+					},
+					'50%': {
+						opacity: '0.7'
+					},
+					'100%': {
+						transform: 'scale(1) rotate(360deg)',
+						opacity: '1'
+					}
+				},
+				'portal-spin': {
+					from: {
+						transform: 'rotate(0deg)'
+					},
+					to: {
+						transform: 'rotate(360deg)'
+					}
+				},
+				'portal-pulse': {
+					'0%, 100%': {
+						transform: 'translate(-50%, -50%) scale(1)'
+					},
+					'50%': {
+						transform: 'translate(-50%, -50%) scale(1.1)'
+					}
+				},
+				'fiber-float': {
+					'0%': {
+						opacity: '1',
+						transform: 'translate(0, 0) rotate(0deg)'
+					},
+					'100%': {
+						opacity: '0',
+						transform: 'translate(100px, -50px) rotate(180deg)'
+					}
+				},
+				'float': {
+					'0%, 100%': {
+						transform: 'translateY(0px) rotate(0deg)'
+					},
+					'50%': {
+						transform: 'translateY(-20px) rotate(5deg)'
+					}
+				},
+				'float-delayed': {
+					'0%, 100%': {
+						transform: 'translateY(0px) rotate(0deg)'
+					},
+					'50%': {
+						transform: 'translateY(-15px) rotate(-3deg)'
 					}
 				}
 			},
@@ -132,7 +208,14 @@ export default {
 				'fade-in': 'fade-in 0.5s ease-out',
 				'shake': 'shake 0.5s ease-in-out',
 				'slide-out-left': 'slide-out-left 1s ease-in-out',
-				'portal-spin': 'portal-spin 2s ease-in-out infinite'
+				'hand-slide-in': 'hand-slide-in 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards',
+				'cloth-drag': 'cloth-drag 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards',
+				'portal-emerge': 'portal-emerge 2s ease-out forwards',
+				'portal-spin': 'portal-spin 3s linear infinite',
+				'portal-pulse': 'portal-pulse 2s ease-in-out infinite',
+				'fiber-float': 'fiber-float 2s ease-out forwards',
+				'float': 'float 6s ease-in-out infinite',
+				'float-delayed': 'float-delayed 8s ease-in-out infinite'
 			}
 		}
 	},

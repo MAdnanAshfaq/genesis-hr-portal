@@ -74,7 +74,7 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
-    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="10" fill="%23a855f7" stroke="%23ffffff" stroke-width="2"/><circle cx="16" cy="16" r="3" fill="%23ffffff"/></svg>'), auto;
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><defs><radialGradient id="grad" cx="50%25" cy="50%25" r="50%25"><stop offset="0%25" style="stop-color:%23a855f7;stop-opacity:1" /><stop offset="100%25" style="stop-color:%236366f1;stop-opacity:0.8" /></radialGradient></defs><circle cx="16" cy="16" r="12" fill="url(%23grad)" stroke="%23ffffff" stroke-width="2"/><circle cx="16" cy="16" r="4" fill="%23ffffff"/><circle cx="14" cy="12" r="1.5" fill="%23a855f7" opacity="0.6"/></svg>'), auto;
   }
 }
 
@@ -86,9 +86,328 @@
   .cursor-none {
     cursor: none;
   }
+
+  /* Realistic Hand Animation */
+  .hand-container {
+    position: absolute;
+    left: -200px;
+    top: 50%;
+    transform: translateY(-50%);
+    animation: hand-slide-in 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+
+  .realistic-hand {
+    position: relative;
+    width: 120px;
+    height: 180px;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
+  }
+
+  .hand-shadow {
+    position: absolute;
+    bottom: -10px;
+    left: 10px;
+    width: 100px;
+    height: 30px;
+    background: radial-gradient(ellipse, rgba(0, 0, 0, 0.3) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: shadow-move 1.2s ease-out forwards;
+  }
+
+  .hand-base {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .palm {
+    position: absolute;
+    bottom: 0;
+    left: 20px;
+    width: 80px;
+    height: 100px;
+    background: linear-gradient(145deg, #fdbcb4, #f1a398);
+    border-radius: 40px 40px 20px 20px;
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .thumb {
+    position: absolute;
+    bottom: 30px;
+    left: 0;
+    width: 35px;
+    height: 60px;
+    background: linear-gradient(145deg, #fdbcb4, #f1a398);
+    border-radius: 20px;
+    transform: rotate(-20deg);
+    animation: thumb-curl 0.3s ease-out 0.8s forwards;
+    box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .finger {
+    position: absolute;
+    width: 18px;
+    height: 70px;
+    background: linear-gradient(145deg, #fdbcb4, #f1a398);
+    border-radius: 10px;
+    box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .finger-1 {
+    bottom: 80px;
+    left: 25px;
+    height: 60px;
+    animation: finger-curl-1 0.3s ease-out 0.9s forwards;
+  }
+
+  .finger-2 {
+    bottom: 85px;
+    left: 45px;
+    height: 70px;
+    animation: finger-curl-2 0.3s ease-out 1.0s forwards;
+  }
+
+  .finger-3 {
+    bottom: 80px;
+    left: 65px;
+    height: 65px;
+    animation: finger-curl-3 0.3s ease-out 1.1s forwards;
+  }
+
+  .finger-4 {
+    bottom: 70px;
+    left: 85px;
+    height: 50px;
+    animation: finger-curl-4 0.3s ease-out 1.2s forwards;
+  }
+
+  /* Signin Page Cloth Physics */
+  .signin-page-container {
+    transition: all 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform-origin: left center;
+    position: relative;
+    z-index: 10;
+  }
+
+  .signin-page-container.being-dragged {
+    animation: cloth-drag 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    filter: blur(1px);
+  }
+
+  .signin-page-container.page-hidden {
+    opacity: 0;
+    transform: translateX(-100%) rotateY(-15deg) scale(0.8);
+  }
+
+  .signin-card {
+    transition: all 0.3s ease;
+  }
+
+  .signin-page-container.being-dragged .signin-card {
+    animation: card-deform 1.5s ease-out forwards;
+  }
+
+  .signin-button.button-being-pulled {
+    animation: button-stick 0.5s ease-out 0.8s forwards;
+  }
+
+  /* Portal Effect */
+  .portal-container {
+    position: relative;
+    width: 400px;
+    height: 400px;
+    animation: portal-emerge 2s ease-out forwards;
+  }
+
+  .portal-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid;
+    animation: portal-spin 3s linear infinite;
+  }
+
+  .portal-ring-1 {
+    width: 100%;
+    height: 100%;
+    border-color: #a855f7;
+    animation-duration: 2s;
+  }
+
+  .portal-ring-2 {
+    width: 70%;
+    height: 70%;
+    top: 15%;
+    left: 15%;
+    border-color: #ec4899;
+    animation-duration: 1.5s;
+    animation-direction: reverse;
+  }
+
+  .portal-ring-3 {
+    width: 40%;
+    height: 40%;
+    top: 30%;
+    left: 30%;
+    border-color: #3b82f6;
+    animation-duration: 1s;
+  }
+
+  .portal-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(168, 85, 247, 0.8) 100%);
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: portal-pulse 2s ease-in-out infinite;
+  }
 }
 
 @layer utilities {
+  /* Hand Animation Keyframes */
+  @keyframes hand-slide-in {
+    0% {
+      left: -200px;
+      opacity: 0;
+    }
+    30% {
+      opacity: 1;
+    }
+    100% {
+      left: 20%;
+      opacity: 1;
+    }
+  }
+
+  @keyframes thumb-curl {
+    from { transform: rotate(-20deg); }
+    to { transform: rotate(-45deg); }
+  }
+
+  @keyframes finger-curl-1 {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(15deg); }
+  }
+
+  @keyframes finger-curl-2 {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(20deg); }
+  }
+
+  @keyframes finger-curl-3 {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(15deg); }
+  }
+
+  @keyframes finger-curl-4 {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(10deg); }
+  }
+
+  @keyframes shadow-move {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(200px); }
+  }
+
+  /* Cloth Physics */
+  @keyframes cloth-drag {
+    0% {
+      transform: translateX(0) rotateY(0deg) scale(1);
+      filter: blur(0px);
+    }
+    30% {
+      transform: translateX(-10px) rotateY(-2deg) scale(0.98);
+      filter: blur(0.5px);
+    }
+    60% {
+      transform: translateX(-40px) rotateY(-8deg) scale(0.9);
+      filter: blur(1px);
+    }
+    100% {
+      transform: translateX(-120%) rotateY(-25deg) scale(0.7);
+      filter: blur(2px);
+      opacity: 0;
+    }
+  }
+
+  @keyframes card-deform {
+    0% { transform: perspective(1000px) rotateY(0deg) rotateX(0deg); }
+    50% { transform: perspective(1000px) rotateY(-5deg) rotateX(2deg) scale(0.95); }
+    100% { transform: perspective(1000px) rotateY(-15deg) rotateX(5deg) scale(0.8); }
+  }
+
+  @keyframes button-stick {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-3px) scale(0.98); }
+    100% { transform: translateY(-5px) scale(0.95); }
+  }
+
+  /* Portal Animations */
+  @keyframes portal-emerge {
+    0% {
+      transform: scale(0) rotate(0deg);
+      opacity: 0;
+    }
+    50% {
+      opacity: 0.7;
+    }
+    100% {
+      transform: scale(1) rotate(360deg);
+      opacity: 1;
+    }
+  }
+
+  @keyframes portal-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes portal-pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.1); }
+  }
+
+  /* Particle Effects */
+  @keyframes fiber-float {
+    0% {
+      opacity: 1;
+      transform: translate(0, 0) rotate(0deg);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(100px, -50px) rotate(180deg);
+    }
+  }
+
+  /* Background animations */
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+  }
+
+  @keyframes float-delayed {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(-3deg); }
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-float-delayed {
+    animation: float-delayed 8s ease-in-out infinite;
+    animation-delay: 2s;
+  }
+
+  .animate-fiber-float {
+    animation: fiber-float 2s ease-out forwards;
+  }
+
   @keyframes shake {
     0%, 100% {
       transform: translateX(0);
