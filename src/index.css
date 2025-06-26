@@ -87,7 +87,7 @@
     cursor: none;
   }
 
-  /* Realistic Hand Animation System */
+  /* Login Hand Animation System */
   .hand-animation-container {
     perspective: 1000px;
   }
@@ -98,7 +98,7 @@
     top: 45%;
     transform: translateY(-50%) rotateY(-15deg);
     animation: hand-slide-in-realistic 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-    filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.4));
+    filter: drop-shadow(0 8px 15px rgba(0, 0, 0, 0.2));
   }
 
   .realistic-hand {
@@ -113,8 +113,8 @@
     bottom: -20px;
     left: 20px;
     width: 120px;
-    height: 40px;
-    background: radial-gradient(ellipse, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.1) 50%, transparent 100%);
+    height: 30px;
+    background: radial-gradient(ellipse, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.1) 50%, transparent 100%);
     border-radius: 60px;
     animation: shadow-realistic-move 1.2s ease-out 0.3s forwards;
     transform: rotateX(90deg) translateZ(-10px);
@@ -330,7 +330,7 @@
     top: 45%;
     transform: translateY(-50%) rotateY(15deg);
     animation: hand-push-in 1.0s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-    filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.4));
+    filter: drop-shadow(0 8px 15px rgba(0, 0, 0, 0.2));
   }
 
   .realistic-hand-push {
@@ -346,8 +346,8 @@
     bottom: -20px;
     left: 20px;
     width: 120px;
-    height: 40px;
-    background: radial-gradient(ellipse, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.1) 50%, transparent 100%);
+    height: 30px;
+    background: radial-gradient(ellipse, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.1) 50%, transparent 100%);
     border-radius: 60px;
     animation: shadow-push-move 1.0s ease-out 0.2s forwards;
     transform: rotateX(90deg) translateZ(-10px);
@@ -369,7 +369,7 @@
   .signin-page-cloth.cloth-hidden {
     opacity: 0;
     transform: translateX(-120%) rotateY(-25deg) scale(0.7);
-    filter: blur(3px);
+    filter: blur(1px);
   }
 
   /* Logout cloth animation */
@@ -381,7 +381,7 @@
     bottom: 0;
     transform: translateX(120%) rotateY(25deg) scale(0.7);
     opacity: 0;
-    filter: blur(3px);
+    filter: blur(1px);
     transform-origin: right center;
     z-index: 10;
   }
@@ -545,7 +545,7 @@
 }
 
 @layer utilities {
-  /* Realistic Hand Animation Keyframes */
+  /* Login Hand Animation Keyframes */
   @keyframes hand-slide-in-realistic {
     0% {
       left: -250px;
@@ -589,22 +589,22 @@
   @keyframes shadow-realistic-move {
     0% { 
       transform: rotateX(90deg) translateZ(-10px) translateX(0px); 
-      opacity: 0.4;
+      opacity: 0.3;
     }
     100% { 
       transform: rotateX(90deg) translateZ(-10px) translateX(150px); 
-      opacity: 0.6;
+      opacity: 0.4;
     }
   }
 
   @keyframes shadow-push-move {
     0% { 
       transform: rotateX(90deg) translateZ(-10px) translateX(0px); 
-      opacity: 0.4;
+      opacity: 0.3;
     }
     100% { 
       transform: rotateX(90deg) translateZ(-10px) translateX(-150px); 
-      opacity: 0.6;
+      opacity: 0.4;
     }
   }
 
@@ -642,19 +642,19 @@
     }
     25% {
       transform: translateX(-5px) rotateY(-1deg) scale(0.99) rotateZ(1deg);
-      filter: blur(0.2px);
+      filter: blur(0.1px);
     }
     50% {
       transform: translateX(-25px) rotateY(-5deg) scale(0.95) rotateZ(2deg);
-      filter: blur(0.8px);
+      filter: blur(0.3px);
     }
     75% {
       transform: translateX(-60px) rotateY(-15deg) scale(0.85) rotateZ(3deg);
-      filter: blur(1.5px);
+      filter: blur(0.6px);
     }
     100% {
       transform: translateX(-120%) rotateY(-25deg) scale(0.7) rotateZ(5deg);
-      filter: blur(2.5px);
+      filter: blur(1px);
       opacity: 0;
     }
   }
@@ -662,22 +662,22 @@
   @keyframes cloth-return-realistic {
     0% {
       transform: translateX(120%) rotateY(25deg) scale(0.7) rotateZ(-5deg);
-      filter: blur(2.5px);
+      filter: blur(1px);
       opacity: 0;
     }
     25% {
       transform: translateX(60px) rotateY(15deg) scale(0.85) rotateZ(-3deg);
-      filter: blur(1.5px);
+      filter: blur(0.6px);
       opacity: 0.3;
     }
     50% {
       transform: translateX(25px) rotateY(5deg) scale(0.95) rotateZ(-2deg);
-      filter: blur(0.8px);
+      filter: blur(0.3px);
       opacity: 0.7;
     }
     75% {
       transform: translateX(5px) rotateY(1deg) scale(0.99) rotateZ(-1deg);
-      filter: blur(0.2px);
+      filter: blur(0.1px);
       opacity: 0.9;
     }
     100% {
