@@ -319,6 +319,40 @@
     border: 1px solid rgba(139, 69, 19, 0.3);
   }
 
+  /* Logout Hand Animation */
+  .hand-push-container {
+    perspective: 1000px;
+  }
+
+  .realistic-hand-wrapper-push {
+    position: absolute;
+    right: -250px;
+    top: 45%;
+    transform: translateY(-50%) rotateY(15deg);
+    animation: hand-push-in 1.0s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.4));
+  }
+
+  .realistic-hand-push {
+    position: relative;
+    width: 140px;
+    height: 200px;
+    transform-style: preserve-3d;
+    transform: scaleX(-1);
+  }
+
+  .hand-shadow-push {
+    position: absolute;
+    bottom: -20px;
+    left: 20px;
+    width: 120px;
+    height: 40px;
+    background: radial-gradient(ellipse, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.1) 50%, transparent 100%);
+    border-radius: 60px;
+    animation: shadow-push-move 1.0s ease-out 0.2s forwards;
+    transform: rotateX(90deg) translateZ(-10px);
+  }
+
   /* Cloth Physics for Signin Page */
   .signin-page-cloth {
     transition: all 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -336,6 +370,24 @@
     opacity: 0;
     transform: translateX(-120%) rotateY(-25deg) scale(0.7);
     filter: blur(3px);
+  }
+
+  /* Logout cloth animation */
+  .login-page-return {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transform: translateX(120%) rotateY(25deg) scale(0.7);
+    opacity: 0;
+    filter: blur(3px);
+    transform-origin: right center;
+    z-index: 10;
+  }
+
+  .login-page-return.cloth-returning {
+    animation: cloth-return-realistic 1.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
   }
 
   .signin-card {
@@ -362,6 +414,19 @@
     width: 500px;
     height: 500px;
     animation: portal-emerge-epic 2.5s ease-out forwards;
+  }
+
+  /* Portal closing animation */
+  .portal-close-overlay {
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.1) 0%, rgba(0, 0, 0, 0.8) 100%);
+    backdrop-filter: blur(10px);
+  }
+
+  .portal-container-close {
+    position: relative;
+    width: 500px;
+    height: 500px;
+    animation: portal-close-epic 1.5s ease-in forwards;
   }
 
   .portal-ring {
@@ -396,6 +461,32 @@
     animation: portal-spin-inner 1.5s linear infinite;
   }
 
+  /* Portal closing rings */
+  .portal-ring-outer-close {
+    width: 100%;
+    height: 100%;
+    border-color: #a855f7;
+    animation: portal-spin-outer-close 1.5s linear forwards;
+  }
+
+  .portal-ring-middle-close {
+    width: 70%;
+    height: 70%;
+    top: 15%;
+    left: 15%;
+    border-color: #ec4899;
+    animation: portal-spin-middle-close 1.5s linear forwards;
+  }
+
+  .portal-ring-inner-close {
+    width: 40%;
+    height: 40%;
+    top: 30%;
+    left: 30%;
+    border-color: #3b82f6;
+    animation: portal-spin-inner-close 1.5s linear forwards;
+  }
+
   .portal-center {
     position: absolute;
     top: 50%;
@@ -411,6 +502,21 @@
     animation: portal-pulse-epic 2s ease-in-out infinite;
   }
 
+  .portal-center-close {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(168, 85, 247, 0.8) 70%, transparent 100%);
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: portal-close-center 1.5s ease-in forwards;
+  }
+
   .portal-energy {
     position: absolute;
     top: -10px;
@@ -420,6 +526,19 @@
     border-radius: 50%;
     background: conic-gradient(from 0deg, transparent 0%, #a855f7 25%, #ec4899 50%, #3b82f6 75%, transparent 100%);
     animation: portal-energy-spin 1s linear infinite;
+    filter: blur(2px);
+    opacity: 0.7;
+  }
+
+  .portal-energy-close {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, transparent 0%, #a855f7 25%, #ec4899 50%, #3b82f6 75%, transparent 100%);
+    animation: portal-energy-close-spin 1.5s linear forwards;
     filter: blur(2px);
     opacity: 0.7;
   }
@@ -447,6 +566,26 @@
     }
   }
 
+  @keyframes hand-push-in {
+    0% {
+      right: -250px;
+      opacity: 0;
+      transform: translateY(-50%) rotateY(15deg) rotateZ(5deg);
+    }
+    20% {
+      opacity: 0.3;
+    }
+    60% {
+      right: 15%;
+      opacity: 0.9;
+    }
+    100% {
+      right: 20%;
+      opacity: 1;
+      transform: translateY(-50%) rotateY(5deg) rotateZ(-2deg);
+    }
+  }
+
   @keyframes shadow-realistic-move {
     0% { 
       transform: rotateX(90deg) translateZ(-10px) translateX(0px); 
@@ -454,6 +593,17 @@
     }
     100% { 
       transform: rotateX(90deg) translateZ(-10px) translateX(150px); 
+      opacity: 0.6;
+    }
+  }
+
+  @keyframes shadow-push-move {
+    0% { 
+      transform: rotateX(90deg) translateZ(-10px) translateX(0px); 
+      opacity: 0.4;
+    }
+    100% { 
+      transform: rotateX(90deg) translateZ(-10px) translateX(-150px); 
       opacity: 0.6;
     }
   }
@@ -509,6 +659,34 @@
     }
   }
 
+  @keyframes cloth-return-realistic {
+    0% {
+      transform: translateX(120%) rotateY(25deg) scale(0.7) rotateZ(-5deg);
+      filter: blur(2.5px);
+      opacity: 0;
+    }
+    25% {
+      transform: translateX(60px) rotateY(15deg) scale(0.85) rotateZ(-3deg);
+      filter: blur(1.5px);
+      opacity: 0.3;
+    }
+    50% {
+      transform: translateX(25px) rotateY(5deg) scale(0.95) rotateZ(-2deg);
+      filter: blur(0.8px);
+      opacity: 0.7;
+    }
+    75% {
+      transform: translateX(5px) rotateY(1deg) scale(0.99) rotateZ(-1deg);
+      filter: blur(0.2px);
+      opacity: 0.9;
+    }
+    100% {
+      transform: translateX(0) rotateY(0deg) scale(1) rotateZ(0deg);
+      filter: blur(0px);
+      opacity: 1;
+    }
+  }
+
   @keyframes card-cloth-deform {
     0% { 
       transform: perspective(1000px) rotateY(0deg) rotateX(0deg) rotateZ(0deg); 
@@ -561,6 +739,27 @@
     }
   }
 
+  @keyframes portal-close-epic {
+    0% {
+      transform: scale(1) rotate(0deg);
+      opacity: 1;
+      filter: blur(0px);
+    }
+    40% {
+      opacity: 0.7;
+      filter: blur(2px);
+    }
+    70% {
+      opacity: 0.3;
+      filter: blur(5px);
+    }
+    100% {
+      transform: scale(0) rotate(-360deg);
+      opacity: 0;
+      filter: blur(10px);
+    }
+  }
+
   @keyframes portal-spin-outer {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
@@ -576,6 +775,39 @@
     to { transform: rotate(360deg); }
   }
 
+  @keyframes portal-spin-outer-close {
+    from { 
+      transform: rotate(0deg); 
+      opacity: 1;
+    }
+    to { 
+      transform: rotate(-180deg); 
+      opacity: 0;
+    }
+  }
+
+  @keyframes portal-spin-middle-close {
+    from { 
+      transform: rotate(0deg); 
+      opacity: 1;
+    }
+    to { 
+      transform: rotate(180deg); 
+      opacity: 0;
+    }
+  }
+
+  @keyframes portal-spin-inner-close {
+    from { 
+      transform: rotate(0deg); 
+      opacity: 1;
+    }
+    to { 
+      transform: rotate(-180deg); 
+      opacity: 0;
+    }
+  }
+
   @keyframes portal-pulse-epic {
     0%, 100% { 
       transform: translate(-50%, -50%) scale(1);
@@ -587,9 +819,38 @@
     }
   }
 
+  @keyframes portal-close-center {
+    0% { 
+      transform: translate(-50%, -50%) scale(1);
+      box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+      opacity: 1;
+    }
+    50% { 
+      transform: translate(-50%, -50%) scale(0.5);
+      box-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
+      opacity: 0.5;
+    }
+    100% { 
+      transform: translate(-50%, -50%) scale(0);
+      box-shadow: 0 0 0px rgba(168, 85, 247, 0);
+      opacity: 0;
+    }
+  }
+
   @keyframes portal-energy-spin {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
+  }
+
+  @keyframes portal-energy-close-spin {
+    from { 
+      transform: rotate(0deg); 
+      opacity: 0.7;
+    }
+    to { 
+      transform: rotate(-360deg); 
+      opacity: 0;
+    }
   }
 
   /* Particle Effects */
