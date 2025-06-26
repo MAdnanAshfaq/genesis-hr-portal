@@ -27,20 +27,24 @@ export function LoginForm() {
     try {
       const success = await login({ username, password });
       if (success) {
+        console.log('Login successful, starting animation sequence');
         setAnimationStarted(true);
         
         // Start the cinematic sequence
         setTimeout(() => {
+          console.log('Showing hand animation');
           setShowHandAnimation(true);
         }, 300);
         
         // Start page dragging after hand grabs
         setTimeout(() => {
+          console.log('Starting page drag');
           setPageBeingDragged(true);
         }, 1500);
         
         // Show portal effect
         setTimeout(() => {
+          console.log('Showing portal');
           setShowPortal(true);
         }, 2000);
       } else {
@@ -94,32 +98,37 @@ export function LoginForm() {
               </div>
               <div className="hand-thumb">
                 <div className="thumb-segment-1"></div>
-                <div className="thumb-segment-2"></div>
-                <div className="thumb-nail"></div>
+                <div className="thumb-segment-2">
+                  <div className="thumb-nail"></div>
+                </div>
               </div>
               <div className="hand-finger finger-index">
                 <div className="finger-segment-1"></div>
                 <div className="finger-segment-2"></div>
-                <div className="finger-segment-3"></div>
-                <div className="finger-nail"></div>
+                <div className="finger-segment-3">
+                  <div className="finger-nail"></div>
+                </div>
               </div>
               <div className="hand-finger finger-middle">
                 <div className="finger-segment-1"></div>
                 <div className="finger-segment-2"></div>
-                <div className="finger-segment-3"></div>
-                <div className="finger-nail"></div>
+                <div className="finger-segment-3">
+                  <div className="finger-nail"></div>
+                </div>
               </div>
               <div className="hand-finger finger-ring">
                 <div className="finger-segment-1"></div>
                 <div className="finger-segment-2"></div>
-                <div className="finger-segment-3"></div>
-                <div className="finger-nail"></div>
+                <div className="finger-segment-3">
+                  <div className="finger-nail"></div>
+                </div>
               </div>
               <div className="hand-finger finger-pinky">
                 <div className="finger-segment-1"></div>
                 <div className="finger-segment-2"></div>
-                <div className="finger-segment-3"></div>
-                <div className="finger-nail"></div>
+                <div className="finger-segment-3">
+                  <div className="finger-nail"></div>
+                </div>
               </div>
             </div>
           </div>
@@ -197,7 +206,7 @@ export function LoginForm() {
 
                   <Button 
                     type="submit" 
-                    className={`signin-button w-full h-12 text-lg bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 transform hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-purple-500/50 ${isLoading ? 'button-being-grabbed' : ''}`}
+                    className={`signin-button w-full h-12 text-lg bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 transform hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-purple-500/50 ${isLoading && animationStarted ? 'button-being-grabbed' : ''}`}
                     disabled={isLoading}
                   >
                     {isLoading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
