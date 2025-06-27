@@ -1,0 +1,92 @@
+
+/* Premium Dashboard Animations */
+@layer utilities {
+  /* Glassmorphic Card Effects */
+  .glass-card {
+    @apply backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl;
+  }
+
+  .glass-card-hover {
+    @apply hover:bg-white/15 hover:border-white/30 hover:shadow-3xl hover:scale-[1.02];
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Reduced Vibration Animations */
+  .gentle-float {
+    animation: gentle-float 8s ease-in-out infinite;
+  }
+
+  .subtle-glow {
+    @apply hover:shadow-lg hover:shadow-primary/20;
+    transition: box-shadow 0.3s ease;
+  }
+
+  /* Number Counter Animation */
+  .number-counter {
+    animation: number-roll 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  /* Particle Background */
+  .floating-particle {
+    animation: particle-float 15s ease-in-out infinite;
+  }
+
+  /* Interactive Ripple Effect */
+  .ripple-effect {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ripple-effect::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+
+  .ripple-effect:active::before {
+    width: 200px;
+    height: 200px;
+  }
+}
+
+@keyframes gentle-float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(2deg);
+  }
+}
+
+@keyframes number-roll {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes particle-float {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px) scale(1);
+    opacity: 0.3;
+  }
+  33% {
+    transform: translateY(-30px) translateX(20px) scale(1.1);
+    opacity: 0.6;
+  }
+  66% {
+    transform: translateY(10px) translateX(-15px) scale(0.9);
+    opacity: 0.4;
+  }
+}

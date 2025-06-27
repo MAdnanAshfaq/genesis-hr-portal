@@ -1,1060 +1,140 @@
 
+@import './styles/animations.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 250 250 250;
-    --foreground: 222.2 84% 4.9%;
+    --background: 220 26% 14%;
+    --foreground: 210 40% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 224 71% 4%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 224 71% 4%;
+    --popover-foreground: 210 40% 98%;
 
     --primary: 199 89% 48%;
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 215 27% 17%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 215 27% 17%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 215 27% 17%;
+    --accent-foreground: 210 40% 98%;
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
+    --border: 215 27% 17%;
+    --input: 215 27% 17%;
     --ring: 199 89% 48%;
 
     --radius: 0.75rem;
   }
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 199 89% 48%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 199 89% 48%;
-  }
-}
-
-@layer base {
   * {
     @apply border-border;
   }
+  
   body {
-    @apply bg-background text-foreground;
+    @apply bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
-    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><defs><radialGradient id="grad" cx="50%25" cy="50%25" r="50%25"><stop offset="0%25" style="stop-color:%23a855f7;stop-opacity:1" /><stop offset="100%25" style="stop-color:%236366f1;stop-opacity:0.8" /></radialGradient></defs><circle cx="16" cy="16" r="12" fill="url(%23grad)" stroke="%23ffffff" stroke-width="2"/><circle cx="16" cy="16" r="4" fill="%23ffffff"/><circle cx="14" cy="12" r="1.5" fill="%23a855f7" opacity="0.6"/></svg>'), auto;
+    min-height: 100vh;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+      radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, rgba(168, 85, 247, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
   }
 }
 
 @layer components {
-  .gradient-bg {
-    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
-  }
-  
-  .cursor-none {
-    cursor: none;
+  /* Premium Dashboard Background */
+  .dashboard-bg {
+    @apply min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden;
   }
 
-  /* Dashboard Animation System */
-  .dashboard-card {
-    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    transform-style: preserve-3d;
+  /* Glassmorphic Cards */
+  .glass-card {
+    @apply backdrop-blur-xl bg-white/5 border border-white/10 shadow-2xl rounded-2xl;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .dashboard-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 30px rgba(59, 130, 246, 0.1);
+  .glass-card:hover {
+    @apply bg-white/10 border-white/20 shadow-3xl scale-[1.02];
   }
 
+  /* Stats Card Enhancements */
   .stats-card {
-    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    animation: stats-card-entrance 0.8s ease-out forwards;
-    transform-origin: center bottom;
+    @apply glass-card gentle-float subtle-glow;
   }
 
-  .stats-card:hover {
-    animation: stats-card-float 2s ease-in-out infinite;
+  /* Reduced Animation Cards */
+  .calm-card {
+    transition: all 0.3s ease;
   }
 
-  .animated-table-row {
-    opacity: 0;
-    transform: translateX(-20px);
-    animation: table-row-slide-in 0.6s ease-out forwards;
+  .calm-card:hover {
+    @apply scale-[1.01] shadow-lg;
   }
 
-  .animated-table-row:hover {
-    transform: translateX(4px) scale(1.01);
-    box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1), 0 0 15px rgba(59, 130, 246, 0.05);
-  }
-
-  .animated-badge {
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    animation: badge-pulse 2s ease-in-out infinite;
-  }
-
-  .animated-badge:hover {
-    transform: scale(1.1) translateY(-2px);
-    filter: brightness(1.1);
-  }
-
-  /* Progress Bar Animations */
-  .animated-progress {
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-    animation: progress-shimmer 2s infinite;
-  }
-
-  /* Ripple Effect */
-  .ripple-effect {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .ripple-effect::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.5);
-    transform: translate(-50%, -50%);
-    transition: width 0.6s, height 0.6s;
-  }
-
-  .ripple-effect:active::before {
-    width: 300px;
-    height: 300px;
-  }
-
-  /* Loading Skeleton */
-  .loading-skeleton {
-    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-    background-size: 200% 100%;
-    animation: skeleton-shimmer 1.5s infinite;
-  }
-
-  /* Magnetic Button Effect */
-  .magnetic-button {
-    transition: transform 0.2s ease-out;
-  }
-
-  .magnetic-button:hover {
-    animation: magnetic-float 0.6s ease-out forwards;
-  }
-
-  /* Login Hand Animation System */
-  .hand-animation-container {
-    perspective: 1000px;
-  }
-
-  .realistic-hand-wrapper {
-    position: absolute;
-    left: -250px;
-    top: 45%;
-    transform: translateY(-50%) rotateY(-15deg);
-    animation: hand-slide-in-realistic 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-    filter: drop-shadow(0 8px 15px rgba(0, 0, 0, 0.2));
-  }
-
-  .realistic-hand {
-    position: relative;
-    width: 140px;
-    height: 200px;
-    transform-style: preserve-3d;
-  }
-
-  .hand-shadow {
-    position: absolute;
-    bottom: -20px;
-    left: 20px;
-    width: 120px;
-    height: 30px;
-    background: radial-gradient(ellipse, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.1) 50%, transparent 100%);
-    border-radius: 60px;
-    animation: shadow-realistic-move 1.2s ease-out 0.3s forwards;
-    transform: rotateX(90deg) translateZ(-10px);
-  }
-
-  /* Hand Wrist */
-  .hand-wrist {
-    position: absolute;
-    bottom: 0;
-    left: 30px;
-    width: 70px;
-    height: 40px;
-    background: linear-gradient(145deg, #fdbcb4 0%, #f1a398 50%, #e8967c 100%);
-    border-radius: 35px 35px 15px 15px;
-    box-shadow: inset 2px 2px 6px rgba(139, 69, 19, 0.2), inset -2px -2px 6px rgba(255, 255, 255, 0.1);
-  }
-
-  .wrist-base {
-    position: absolute;
-    top: 5px;
-    left: 5px;
-    right: 5px;
-    bottom: 5px;
-    background: linear-gradient(135deg, #f4a79d 0%, #e8967c 100%);
-    border-radius: 30px 30px 10px 10px;
-  }
-
-  /* Hand Palm */
-  .hand-palm {
-    position: absolute;
-    bottom: 35px;
-    left: 20px;
-    width: 90px;
-    height: 110px;
-    background: linear-gradient(145deg, #fdbcb4 0%, #f1a398 40%, #e8967c 100%);
-    border-radius: 45px 45px 25px 25px;
-    box-shadow: inset 3px 3px 8px rgba(139, 69, 19, 0.15), inset -3px -3px 8px rgba(255, 255, 255, 0.1);
-    transform: rotateX(5deg);
-  }
-
-  .palm-base {
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    right: 8px;
-    bottom: 8px;
-    background: linear-gradient(135deg, #f4a79d 0%, #e8967c 60%, #d4826a 100%);
-    border-radius: 37px 37px 17px 17px;
-  }
-
-  .palm-lines {
-    position: absolute;
-    top: 20px;
-    left: 15px;
-    right: 15px;
-    height: 60px;
-  }
-
-  .palm-lines::before,
-  .palm-lines::after {
-    content: '';
-    position: absolute;
-    height: 1px;
-    background: rgba(139, 69, 19, 0.2);
-    border-radius: 1px;
-  }
-
-  .palm-lines::before {
-    top: 15px;
-    left: 5px;
-    right: 10px;
-    transform: rotate(-10deg);
-  }
-
-  .palm-lines::after {
-    top: 35px;
-    left: 8px;
-    right: 15px;
-    transform: rotate(5deg);
-  }
-
-  /* Thumb */
-  .hand-thumb {
-    position: absolute;
-    bottom: 60px;
-    left: 0px;
-    width: 45px;
-    height: 75px;
-    transform: rotate(-25deg);
-    animation: thumb-curl-realistic 0.4s ease-out 1.0s forwards;
-  }
-
-  .thumb-segment-1 {
-    position: absolute;
-    bottom: 0;
-    width: 25px;
-    height: 45px;
-    background: linear-gradient(145deg, #fdbcb4 0%, #f1a398 50%, #e8967c 100%);
-    border-radius: 12px;
-    box-shadow: inset 1px 1px 3px rgba(139, 69, 19, 0.2), 2px 2px 6px rgba(0, 0, 0, 0.1);
-  }
-
-  .thumb-segment-2 {
-    position: absolute;
-    top: 0;
-    left: 2px;
-    width: 21px;
-    height: 35px;
-    background: linear-gradient(145deg, #fdbcb4 0%, #f1a398 50%, #e8967c 100%);
-    border-radius: 10px;
-    box-shadow: inset 1px 1px 3px rgba(139, 69, 19, 0.2);
-    transform-origin: bottom center;
-  }
-
-  .thumb-nail {
-    position: absolute;
-    top: 2px;
-    left: 6px;
-    width: 9px;
-    height: 12px;
-    background: linear-gradient(145deg, #ffeaa7 0%, #fdcb6e 100%);
-    border-radius: 4px;
-    border: 1px solid rgba(139, 69, 19, 0.3);
-  }
-
-  /* Fingers */
-  .hand-finger {
-    position: absolute;
-    transform-origin: bottom center;
-  }
-
-  .finger-index {
-    bottom: 115px;
-    left: 35px;
-    width: 22px;
-    height: 80px;
-    animation: finger-curl-index 0.3s ease-out 1.1s forwards;
-  }
-
-  .finger-middle {
-    bottom: 125px;
-    left: 58px;
-    width: 22px;
-    height: 90px;
-    animation: finger-curl-middle 0.3s ease-out 1.2s forwards;
-  }
-
-  .finger-ring {
-    bottom: 115px;
-    left: 81px;
-    width: 20px;
-    height: 80px;
-    animation: finger-curl-ring 0.3s ease-out 1.3s forwards;
-  }
-
-  .finger-pinky {
-    bottom: 95px;
-    left: 100px;
-    width: 18px;
-    height: 65px;
-    animation: finger-curl-pinky 0.3s ease-out 1.4s forwards;
-  }
-
-  .finger-segment-1,
-  .finger-segment-2,
-  .finger-segment-3 {
-    position: absolute;
-    background: linear-gradient(145deg, #fdbcb4 0%, #f1a398 50%, #e8967c 100%);
-    border-radius: 8px;
-    box-shadow: inset 1px 1px 3px rgba(139, 69, 19, 0.2), 1px 1px 4px rgba(0, 0, 0, 0.1);
-  }
-
-  .finger-segment-1 {
-    bottom: 0;
-    width: 100%;
-    height: 35%;
-  }
-
-  .finger-segment-2 {
-    bottom: 30%;
-    width: 95%;
-    left: 2.5%;
-    height: 30%;
-  }
-
-  .finger-segment-3 {
-    bottom: 55%;
-    width: 90%;
-    left: 5%;
-    height: 25%;
-  }
-
-  .finger-nail {
-    position: absolute;
-    top: 2px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60%;
-    height: 8px;
-    background: linear-gradient(145deg, #ffeaa7 0%, #fdcb6e 100%);
-    border-radius: 4px;
-    border: 1px solid rgba(139, 69, 19, 0.3);
-  }
-
-  /* Logout Hand Animation */
-  .hand-push-container {
-    perspective: 1000px;
-  }
-
+  /* Fixed Hand Animation - Clear and Visible */
   .realistic-hand-wrapper-push {
-    position: absolute;
-    right: -250px;
-    top: 45%;
-    transform: translateY(-50%) rotateY(15deg);
-    animation: hand-push-in 1.0s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-    filter: drop-shadow(0 8px 15px rgba(0, 0, 0, 0.2));
+    filter: none !important;
+    opacity: 1 !important;
   }
 
   .realistic-hand-push {
-    position: relative;
-    width: 140px;
-    height: 200px;
-    transform-style: preserve-3d;
-    transform: scaleX(-1);
+    filter: none !important;
   }
 
-  .hand-shadow-push {
+  /* Floating Particles */
+  .floating-particles {
     position: absolute;
-    bottom: -20px;
-    left: 20px;
-    width: 120px;
-    height: 30px;
-    background: radial-gradient(ellipse, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.1) 50%, transparent 100%);
-    border-radius: 60px;
-    animation: shadow-push-move 1.0s ease-out 0.2s forwards;
-    transform: rotateX(90deg) translateZ(-10px);
-  }
-
-  /* Cloth Physics for Signin Page */
-  .signin-page-cloth {
-    transition: all 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    transform-origin: left center;
-    position: relative;
-    z-index: 20;
-    will-change: transform, filter, opacity;
-  }
-
-  .signin-page-cloth.cloth-being-dragged {
-    animation: cloth-drag-realistic 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-  }
-
-  .signin-page-cloth.cloth-hidden {
-    opacity: 0;
-    transform: translateX(-120%) rotateY(-25deg) scale(0.7);
-    filter: blur(1px);
-  }
-
-  /* Logout cloth animation */
-  .login-page-return {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    transform: translateX(120%) rotateY(25deg) scale(0.7);
-    opacity: 0;
-    filter: blur(1px);
-    transform-origin: right center;
-    z-index: 10;
-  }
-
-  .login-page-return.cloth-returning {
-    animation: cloth-return-realistic 1.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-  }
-
-  .signin-card {
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    transform-style: preserve-3d;
-  }
-
-  .cloth-being-dragged .signin-card {
-    animation: card-cloth-deform 1.5s ease-out forwards;
-  }
-
-  .signin-button.button-being-grabbed {
-    animation: button-grab-effect 0.6s ease-out 1.0s forwards;
-  }
-
-  /* Portal Effects */
-  .portal-overlay {
-    background: radial-gradient(circle, rgba(168, 85, 247, 0.1) 0%, rgba(0, 0, 0, 0.8) 100%);
-    backdrop-filter: blur(10px);
-  }
-
-  .portal-container {
-    position: relative;
-    width: 500px;
-    height: 500px;
-    animation: portal-emerge-epic 2.5s ease-out forwards;
-  }
-
-  /* Portal closing animation */
-  .portal-close-overlay {
-    background: radial-gradient(circle, rgba(168, 85, 247, 0.1) 0%, rgba(0, 0, 0, 0.8) 100%);
-    backdrop-filter: blur(10px);
-  }
-
-  .portal-container-close {
-    position: relative;
-    width: 500px;
-    height: 500px;
-    animation: portal-close-epic 1.5s ease-in forwards;
-  }
-
-  .portal-ring {
-    position: absolute;
-    border-radius: 50%;
-    border: 3px solid;
-    filter: drop-shadow(0 0 10px currentColor);
-  }
-
-  .portal-ring-outer {
     width: 100%;
     height: 100%;
-    border-color: #a855f7;
-    animation: portal-spin-outer 3s linear infinite;
+    pointer-events: none;
+    overflow: hidden;
   }
 
-  .portal-ring-middle {
-    width: 70%;
-    height: 70%;
-    top: 15%;
-    left: 15%;
-    border-color: #ec4899;
-    animation: portal-spin-middle 2s linear infinite reverse;
-  }
-
-  .portal-ring-inner {
-    width: 40%;
-    height: 40%;
-    top: 30%;
-    left: 30%;
-    border-color: #3b82f6;
-    animation: portal-spin-inner 1.5s linear infinite;
-  }
-
-  /* Portal closing rings */
-  .portal-ring-outer-close {
-    width: 100%;
-    height: 100%;
-    border-color: #a855f7;
-    animation: portal-spin-outer-close 1.5s linear forwards;
-  }
-
-  .portal-ring-middle-close {
-    width: 70%;
-    height: 70%;
-    top: 15%;
-    left: 15%;
-    border-color: #ec4899;
-    animation: portal-spin-middle-close 1.5s linear forwards;
-  }
-
-  .portal-ring-inner-close {
-    width: 40%;
-    height: 40%;
-    top: 30%;
-    left: 30%;
-    border-color: #3b82f6;
-    animation: portal-spin-inner-close 1.5s linear forwards;
-  }
-
-  .portal-center {
+  .particle {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(168, 85, 247, 0.8) 70%, transparent 100%);
+    width: 4px;
+    height: 4px;
+    background: rgba(59, 130, 246, 0.3);
     border-radius: 50%;
-    width: 150px;
-    height: 150px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: portal-pulse-epic 2s ease-in-out infinite;
   }
 
-  .portal-center-close {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(168, 85, 247, 0.8) 70%, transparent 100%);
-    border-radius: 50%;
-    width: 150px;
-    height: 150px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: portal-close-center 1.5s ease-in forwards;
+  /* Remove excessive vibration */
+  .dashboard-card {
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
-  .portal-energy {
-    position: absolute;
-    top: -10px;
-    left: -10px;
-    right: -10px;
-    bottom: -10px;
-    border-radius: 50%;
-    background: conic-gradient(from 0deg, transparent 0%, #a855f7 25%, #ec4899 50%, #3b82f6 75%, transparent 100%);
-    animation: portal-energy-spin 1s linear infinite;
-    filter: blur(2px);
-    opacity: 0.7;
+  .dashboard-card:hover {
+    transform: translateY(-2px) scale(1.01);
   }
 
-  .portal-energy-close {
-    position: absolute;
-    top: -10px;
-    left: -10px;
-    right: -10px;
-    bottom: -10px;
-    border-radius: 50%;
-    background: conic-gradient(from 0deg, transparent 0%, #a855f7 25%, #ec4899 50%, #3b82f6 75%, transparent 100%);
-    animation: portal-energy-close-spin 1.5s linear forwards;
-    filter: blur(2px);
-    opacity: 0.7;
-  }
-}
-
-@layer utilities {
-  /* Dashboard Animation Keyframes */
-  @keyframes stats-card-entrance {
-    0% {
-      opacity: 0;
-      transform: translateY(20px) scale(0.95);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
+  /* Clean Table Rows */
+  .table-row {
+    transition: all 0.2s ease;
   }
 
-  @keyframes stats-card-float {
-    0%, 100% {
-      transform: translateY(-8px) scale(1.02);
-    }
-    50% {
-      transform: translateY(-12px) scale(1.02);
-    }
-  }
-
-  @keyframes table-row-slide-in {
-    0% {
-      opacity: 0;
-      transform: translateX(-20px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  @keyframes badge-pulse {
-    0%, 100% {
-      transform: scale(1);
-    }
-    50% {
-      transform: scale(1.05);
-    }
-  }
-
-  @keyframes progress-shimmer {
-    0% {
-      transform: translateX(-100%);
-    }
-    100% {
-      transform: translateX(100%);
-    }
-  }
-
-  @keyframes skeleton-shimmer {
-    0% {
-      background-position: -200% 0;
-    }
-    100% {
-      background-position: 200% 0;
-    }
-  }
-
-  @keyframes magnetic-float {
-    0% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-4px) scale(1.05);
-    }
-    100% {
-      transform: translateY(-2px) scale(1.02);
-    }
-  }
-
-  /* Login Hand Animation Keyframes */
-  @keyframes hand-slide-in-realistic {
-    0% {
-      left: -250px;
-      opacity: 0;
-      transform: translateY(-50%) rotateY(-15deg) rotateZ(-5deg);
-    }
-    20% {
-      opacity: 0.3;
-    }
-    60% {
-      left: 15%;
-      opacity: 0.9;
-    }
-    100% {
-      left: 20%;
-      opacity: 1;
-      transform: translateY(-50%) rotateY(-5deg) rotateZ(2deg);
-    }
-  }
-
-  @keyframes hand-push-in {
-    0% {
-      right: -250px;
-      opacity: 0;
-      transform: translateY(-50%) rotateY(15deg) rotateZ(5deg);
-    }
-    20% {
-      opacity: 0.3;
-    }
-    60% {
-      right: 15%;
-      opacity: 0.9;
-    }
-    100% {
-      right: 20%;
-      opacity: 1;
-      transform: translateY(-50%) rotateY(5deg) rotateZ(-2deg);
-    }
-  }
-
-  @keyframes shadow-realistic-move {
-    0% { 
-      transform: rotateX(90deg) translateZ(-10px) translateX(0px); 
-      opacity: 0.3;
-    }
-    100% { 
-      transform: rotateX(90deg) translateZ(-10px) translateX(150px); 
-      opacity: 0.4;
-    }
-  }
-
-  @keyframes shadow-push-move {
-    0% { 
-      transform: rotateX(90deg) translateZ(-10px) translateX(0px); 
-      opacity: 0.3;
-    }
-    100% { 
-      transform: rotateX(90deg) translateZ(-10px) translateX(-150px); 
-      opacity: 0.4;
-    }
-  }
-
-  /* Finger curl animations */
-  @keyframes thumb-curl-realistic {
-    from { transform: rotate(-25deg); }
-    to { transform: rotate(-45deg) scale(0.95); }
-  }
-
-  @keyframes finger-curl-index {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(20deg) translateY(-2px); }
-  }
-
-  @keyframes finger-curl-middle {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(25deg) translateY(-3px); }
-  }
-
-  @keyframes finger-curl-ring {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(20deg) translateY(-2px); }
-  }
-
-  @keyframes finger-curl-pinky {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(15deg) translateY(-1px); }
-  }
-
-  /* Enhanced Cloth Physics */
-  @keyframes cloth-drag-realistic {
-    0% {
-      transform: translateX(0) rotateY(0deg) scale(1) rotateZ(0deg);
-      filter: blur(0px);
-    }
-    25% {
-      transform: translateX(-5px) rotateY(-1deg) scale(0.99) rotateZ(1deg);
-      filter: blur(0.1px);
-    }
-    50% {
-      transform: translateX(-25px) rotateY(-5deg) scale(0.95) rotateZ(2deg);
-      filter: blur(0.3px);
-    }
-    75% {
-      transform: translateX(-60px) rotateY(-15deg) scale(0.85) rotateZ(3deg);
-      filter: blur(0.6px);
-    }
-    100% {
-      transform: translateX(-120%) rotateY(-25deg) scale(0.7) rotateZ(5deg);
-      filter: blur(1px);
-      opacity: 0;
-    }
-  }
-
-  @keyframes cloth-return-realistic {
-    0% {
-      transform: translateX(120%) rotateY(25deg) scale(0.7) rotateZ(-5deg);
-      filter: blur(1px);
-      opacity: 0;
-    }
-    25% {
-      transform: translateX(60px) rotateY(15deg) scale(0.85) rotateZ(-3deg);
-      filter: blur(0.6px);
-      opacity: 0.3;
-    }
-    50% {
-      transform: translateX(25px) rotateY(5deg) scale(0.95) rotateZ(-2deg);
-      filter: blur(0.3px);
-      opacity: 0.7;
-    }
-    75% {
-      transform: translateX(5px) rotateY(1deg) scale(0.99) rotateZ(-1deg);
-      filter: blur(0.1px);
-      opacity: 0.9;
-    }
-    100% {
-      transform: translateX(0) rotateY(0deg) scale(1) rotateZ(0deg);
-      filter: blur(0px);
-      opacity: 1;
-    }
-  }
-
-  @keyframes card-cloth-deform {
-    0% { 
-      transform: perspective(1000px) rotateY(0deg) rotateX(0deg) rotateZ(0deg); 
-    }
-    30% { 
-      transform: perspective(1000px) rotateY(-3deg) rotateX(1deg) rotateZ(1deg) scale(0.98); 
-    }
-    60% { 
-      transform: perspective(1000px) rotateY(-10deg) rotateX(3deg) rotateZ(2deg) scale(0.92); 
-    }
-    100% { 
-      transform: perspective(1000px) rotateY(-20deg) rotateX(8deg) rotateZ(4deg) scale(0.8); 
-    }
-  }
-
-  @keyframes button-grab-effect {
-    0% { 
-      transform: translateY(0) scale(1); 
-      box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
-    }
-    50% { 
-      transform: translateY(-2px) scale(0.98) rotateX(5deg); 
-      box-shadow: 0 2px 8px rgba(168, 85, 247, 0.5);
-    }
-    100% { 
-      transform: translateY(-4px) scale(0.95) rotateX(8deg); 
-      box-shadow: 0 1px 4px rgba(168, 85, 247, 0.7);
-    }
-  }
-
-  /* Enhanced Portal Animations */
-  @keyframes portal-emerge-epic {
-    0% {
-      transform: scale(0) rotate(0deg);
-      opacity: 0;
-      filter: blur(10px);
-    }
-    30% {
-      opacity: 0.3;
-      filter: blur(5px);
-    }
-    60% {
-      opacity: 0.7;
-      filter: blur(2px);
-    }
-    100% {
-      transform: scale(1) rotate(360deg);
-      opacity: 1;
-      filter: blur(0px);
-    }
-  }
-
-  @keyframes portal-close-epic {
-    0% {
-      transform: scale(1) rotate(0deg);
-      opacity: 1;
-      filter: blur(0px);
-    }
-    40% {
-      opacity: 0.7;
-      filter: blur(2px);
-    }
-    70% {
-      opacity: 0.3;
-      filter: blur(5px);
-    }
-    100% {
-      transform: scale(0) rotate(-360deg);
-      opacity: 0;
-      filter: blur(10px);
-    }
-  }
-
-  @keyframes portal-spin-outer {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
-
-  @keyframes portal-spin-middle {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(-360deg); }
-  }
-
-  @keyframes portal-spin-inner {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
-
-  @keyframes portal-spin-outer-close {
-    from { 
-      transform: rotate(0deg); 
-      opacity: 1;
-    }
-    to { 
-      transform: rotate(-180deg); 
-      opacity: 0;
-    }
-  }
-
-  @keyframes portal-spin-middle-close {
-    from { 
-      transform: rotate(0deg); 
-      opacity: 1;
-    }
-    to { 
-      transform: rotate(180deg); 
-      opacity: 0;
-    }
-  }
-
-  @keyframes portal-spin-inner-close {
-    from { 
-      transform: rotate(0deg); 
-      opacity: 1;
-    }
-    to { 
-      transform: rotate(-180deg); 
-      opacity: 0;
-    }
-  }
-
-  @keyframes portal-pulse-epic {
-    0%, 100% { 
-      transform: translate(-50%, -50%) scale(1);
-      box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
-    }
-    50% { 
-      transform: translate(-50%, -50%) scale(1.15);
-      box-shadow: 0 0 40px rgba(168, 85, 247, 0.8);
-    }
-  }
-
-  @keyframes portal-close-center {
-    0% { 
-      transform: translate(-50%, -50%) scale(1);
-      box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
-      opacity: 1;
-    }
-    50% { 
-      transform: translate(-50%, -50%) scale(0.5);
-      box-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
-      opacity: 0.5;
-    }
-    100% { 
-      transform: translate(-50%, -50%) scale(0);
-      box-shadow: 0 0 0px rgba(168, 85, 247, 0);
-      opacity: 0;
-    }
-  }
-
-  @keyframes portal-energy-spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
-
-  @keyframes portal-energy-close-spin {
-    from { 
-      transform: rotate(0deg); 
-      opacity: 0.7;
-    }
-    to { 
-      transform: rotate(-360deg); 
-      opacity: 0;
-    }
-  }
-
-  /* Particle Effects */
-  @keyframes fiber-float {
-    0% {
-      opacity: 1;
-      transform: translate(0, 0) rotate(0deg) scale(1);
-    }
-    50% {
-      opacity: 0.7;
-      transform: translate(50px, -25px) rotate(90deg) scale(0.8);
-    }
-    100% {
-      opacity: 0;
-      transform: translate(120px, -60px) rotate(180deg) scale(0.3);
-    }
-  }
-
-  @keyframes shake {
-    0%, 100% {
-      transform: translateX(0);
-    }
-    10%, 30%, 50%, 70%, 90% {
-      transform: translateX(-10px);
-    }
-    20%, 40%, 60%, 80% {
-      transform: translateX(10px);
-    }
-  }
-
-  @keyframes float {
-    0%, 100% {
-      transform: translateY(0px) rotate(0deg);
-    }
-    50% {
-      transform: translateY(-20px) rotate(5deg);
-    }
-  }
-
-  @keyframes float-delayed {
-    0%, 100% {
-      transform: translateY(0px) rotate(0deg);
-    }
-    50% {
-      transform: translateY(-15px) rotate(-3deg);
-    }
+  .table-row:hover {
+    @apply bg-white/5 scale-[1.002];
   }
 }
