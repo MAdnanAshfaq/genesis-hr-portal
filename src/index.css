@@ -15,7 +15,7 @@
     --popover: 224 71% 4%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 199 89% 48%;
+    --primary: 30 91% 48%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 215 27% 17%;
@@ -32,7 +32,7 @@
 
     --border: 215 27% 17%;
     --input: 215 27% 17%;
-    --ring: 199 89% 48%;
+    --ring: 30 91% 48%;
 
     --radius: 0.75rem;
   }
@@ -42,7 +42,7 @@
   }
   
   body {
-    @apply bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-foreground;
+    @apply bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
     min-height: 100vh;
     position: relative;
@@ -57,7 +57,7 @@
     height: 100%;
     background: 
       radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 75% 75%, rgba(168, 85, 247, 0.1) 0%, transparent 50%);
+      radial-gradient(circle at 75% 75%, rgba(147, 51, 234, 0.1) 0%, transparent 50%);
     pointer-events: none;
     z-index: -1;
   }
@@ -66,75 +66,167 @@
 @layer components {
   /* Premium Dashboard Background */
   .dashboard-bg {
-    @apply min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden;
+    @apply min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 relative overflow-hidden;
   }
 
   /* Glassmorphic Cards */
   .glass-card {
-    @apply backdrop-blur-xl bg-white/5 border border-white/10 shadow-2xl rounded-2xl;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    @apply backdrop-blur-xl bg-white/10 border border-white/20 shadow-xl rounded-2xl;
+    transition: all 0.3s ease-in-out;
   }
 
   .glass-card:hover {
-    @apply bg-white/10 border-white/20 shadow-2xl scale-[1.02];
+    @apply bg-white/15 border-white/30 shadow-2xl;
+    transform: translateY(-2px) scale(1.01);
   }
 
-  /* Stats Card Enhancements */
+  /* Premium Stats Cards */
   .stats-card {
-    @apply glass-card gentle-float subtle-glow;
+    @apply glass-card relative overflow-hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* Reduced Animation Cards */
-  .calm-card {
-    transition: all 0.3s ease;
+  .stats-card:hover {
+    @apply shadow-2xl;
+    transform: translateY(-4px) scale(1.02);
   }
 
-  .calm-card:hover {
-    @apply scale-[1.01] shadow-lg;
+  /* Professional Card Hover Effects */
+  .professional-card {
+    transition: all 0.3s ease-in-out;
   }
 
-  /* Fixed Hand Animation - Clear and Visible */
-  .realistic-hand-wrapper-push {
-    filter: none !important;
-    opacity: 1 !important;
+  .professional-card:hover {
+    @apply shadow-lg;
+    transform: translateY(-2px);
   }
 
-  .realistic-hand-push {
-    filter: none !important;
+  /* Smooth Navigation */
+  .nav-item {
+    transition: all 0.3s ease-in-out;
   }
 
-  /* Floating Particles */
-  .floating-particles {
+  .nav-item:hover {
+    @apply bg-white/10;
+    transform: translateX(4px);
+  }
+
+  /* Content Animations */
+  .fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+
+  .stagger-item {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+
+  /* Remove all shaking/vibrating animations */
+  .no-shake, .no-shake:hover, .dashboard-card, .dashboard-card:hover {
+    animation: none !important;
+  }
+
+  /* Premium Button Effects */
+  .premium-button {
+    @apply relative overflow-hidden;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .premium-button:hover {
+    @apply shadow-lg;
+    transform: translateY(-1px);
+  }
+
+  .premium-button::before {
+    content: '';
     position: absolute;
+    top: 0;
+    left: -100%;
     width: 100%;
     height: 100%;
-    pointer-events: none;
-    overflow: hidden;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
   }
 
-  .particle {
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    background: rgba(59, 130, 246, 0.3);
-    border-radius: 50%;
-  }
-
-  /* Remove excessive vibration */
-  .dashboard-card {
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  }
-
-  .dashboard-card:hover {
-    transform: translateY(-2px) scale(1.01);
+  .premium-button:hover::before {
+    left: 100%;
   }
 
   /* Clean Table Rows */
   .table-row {
-    transition: all 0.2s ease;
+    transition: all 0.2s ease-in-out;
   }
 
   .table-row:hover {
-    @apply bg-white/5 scale-[1.002];
+    @apply bg-white/5;
+    transform: translateX(2px);
   }
+
+  /* Status Badge Animations */
+  .status-badge {
+    transition: all 0.2s ease-in-out;
+  }
+
+  .status-badge:hover {
+    transform: scale(1.05);
+  }
+}
+
+/* Keyframe Animations */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  0% {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes gentleFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes smoothPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Utility Classes */
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.5s ease-out;
+}
+
+.animate-gentle-float {
+  animation: gentleFloat 3s ease-in-out infinite;
+}
+
+.animate-smooth-pulse {
+  animation: smoothPulse 2s ease-in-out infinite;
 }
