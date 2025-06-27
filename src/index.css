@@ -87,6 +87,94 @@
     cursor: none;
   }
 
+  /* Dashboard Animation System */
+  .dashboard-card {
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform-style: preserve-3d;
+  }
+
+  .dashboard-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 30px rgba(59, 130, 246, 0.1);
+  }
+
+  .stats-card {
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    animation: stats-card-entrance 0.8s ease-out forwards;
+    transform-origin: center bottom;
+  }
+
+  .stats-card:hover {
+    animation: stats-card-float 2s ease-in-out infinite;
+  }
+
+  .animated-table-row {
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: table-row-slide-in 0.6s ease-out forwards;
+  }
+
+  .animated-table-row:hover {
+    transform: translateX(4px) scale(1.01);
+    box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1), 0 0 15px rgba(59, 130, 246, 0.05);
+  }
+
+  .animated-badge {
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    animation: badge-pulse 2s ease-in-out infinite;
+  }
+
+  .animated-badge:hover {
+    transform: scale(1.1) translateY(-2px);
+    filter: brightness(1.1);
+  }
+
+  /* Progress Bar Animations */
+  .animated-progress {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: progress-shimmer 2s infinite;
+  }
+
+  /* Ripple Effect */
+  .ripple-effect {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ripple-effect::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+
+  .ripple-effect:active::before {
+    width: 300px;
+    height: 300px;
+  }
+
+  /* Loading Skeleton */
+  .loading-skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s infinite;
+  }
+
+  /* Magnetic Button Effect */
+  .magnetic-button {
+    transition: transform 0.2s ease-out;
+  }
+
+  .magnetic-button:hover {
+    animation: magnetic-float 0.6s ease-out forwards;
+  }
+
   /* Login Hand Animation System */
   .hand-animation-container {
     perspective: 1000px;
@@ -545,6 +633,77 @@
 }
 
 @layer utilities {
+  /* Dashboard Animation Keyframes */
+  @keyframes stats-card-entrance {
+    0% {
+      opacity: 0;
+      transform: translateY(20px) scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes stats-card-float {
+    0%, 100% {
+      transform: translateY(-8px) scale(1.02);
+    }
+    50% {
+      transform: translateY(-12px) scale(1.02);
+    }
+  }
+
+  @keyframes table-row-slide-in {
+    0% {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes badge-pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  @keyframes progress-shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  @keyframes skeleton-shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  @keyframes magnetic-float {
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-4px) scale(1.05);
+    }
+    100% {
+      transform: translateY(-2px) scale(1.02);
+    }
+  }
+
   /* Login Hand Animation Keyframes */
   @keyframes hand-slide-in-realistic {
     0% {
