@@ -76,7 +76,7 @@
   }
 
   .glass-card:hover {
-    @apply bg-white/10 border-white/20 shadow-3xl scale-[1.02];
+    @apply bg-white/10 border-white/20 shadow-2xl scale-[1.02];
   }
 
   /* Stats Card Enhancements */
