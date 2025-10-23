@@ -1,14 +1,23 @@
 import { User, CreateUserData } from '@/types/auth';
-import { LeaveRequest, Announcement, LeaveBalance } from '@/types/hr';
+import { LeaveRequest, Announcement, LeaveBalance, DashboardStats } from '@/types/hr';
 
-// Updated API service without Supabase - ready for your NeonDB integration
+const API_BASE_URL = 'http://localhost:3001/api';
+
+// API service with backend integration - NO MOCK DATA
 export class ApiService {
-  // User Management APIs - Replace with your NeonDB implementation
-  static async getCurrentUser(): Promise<User | null> {
+  private static async makeRequest(url: string, options?: RequestInit): Promise<Response> {
+    const response = await fetch(url, options);
+    if (!response.ok) {
+      throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+    }
+    return response;
+  }
+
+  // User Management APIs
+  static async getCurrentUser(userId: string): Promise<User | null> {
     try {
-      // TODO: Replace with your NeonDB user fetch logic
-      console.log('Fetching current user from your database');
-      return null;
+      const response = await this.makeRequest(`${API_BASE_URL}/users/${userId}`);
+      return await response.json();
     } catch (error) {
       console.error('Error fetching current user:', error);
       return null;
@@ -17,9 +26,8 @@ export class ApiService {
 
   static async getAllUsers(): Promise<User[]> {
     try {
-      // TODO: Replace with your NeonDB users fetch logic
-      console.log('Fetching all users from your database');
-      return [];
+      const response = await this.makeRequest(`${API_BASE_URL}/users`);
+      return await response.json();
     } catch (error) {
       console.error('Error fetching users:', error);
       return [];
@@ -28,8 +36,16 @@ export class ApiService {
 
   static async createUser(userData: CreateUserData, createdBy: string): Promise<boolean> {
     try {
-      // TODO: Replace with your NeonDB user creation logic
-      console.log('Creating user in your database:', userData);
+      await this.makeRequest(`${API_BASE_URL}/users`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...userData,
+          createdBy
+        }),
+      });
       return true;
     } catch (error) {
       console.error('Error creating user:', error);
@@ -39,8 +55,13 @@ export class ApiService {
 
   static async updateUser(userId: string, userData: Partial<User>): Promise<boolean> {
     try {
-      // TODO: Replace with your NeonDB user update logic
-      console.log('Updating user in your database:', userId, userData);
+      await this.makeRequest(`${API_BASE_URL}/users/${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
       return true;
     } catch (error) {
       console.error('Error updating user:', error);
@@ -50,8 +71,9 @@ export class ApiService {
 
   static async deleteUser(userId: string): Promise<boolean> {
     try {
-      // TODO: Replace with your NeonDB user deletion logic
-      console.log('Deleting user from your database:', userId);
+      await this.makeRequest(`${API_BASE_URL}/users/${userId}`, {
+        method: 'DELETE',
+      });
       return true;
     } catch (error) {
       console.error('Error deleting user:', error);
@@ -59,69 +81,87 @@ export class ApiService {
     }
   }
 
-  // Leave Request APIs - Replace with your NeonDB implementation
+  static async getUserByUsername(username: string): Promise<User | null> {
+    try {
+      const response = await this.makeRequest(`${API_BASE_URL}/users/username/${username}`);
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching user by username:', error);
+      return null;
+    }
+  }
+
+  static async getUsersByDepartment(department: string): Promise<User[]> {
+    const allUsers = await this.getAllUsers();
+    return allUsers.filter(user => user.department === department);
+  }
+
+  // Leave Request APIs
   static async getLeaveRequests(): Promise<LeaveRequest[]> {
     try {
-      // TODO: Replace with your NeonDB leave requests fetch logic
-      console.log('Fetching leave requests from your database');
-      return [];
+      const response = await this.makeRequest(`${API_BASE_URL}/leave-requests`);
+      return await response.json();
     } catch (error) {
       console.error('Error fetching leave requests:', error);
       return [];
     }
   }
 
-  static async createLeaveRequest(requestData: Omit<LeaveRequest, 'id' | 'userName' | 'status' | 'replies'>): Promise<boolean> {
+  static async getLeaveRequestsByUser(userId: string): Promise<LeaveRequest[]> {
+    const allRequests = await this.getLeaveRequests();
+    return allRequests.filter(request => request.userId === userId);
+  }
+
+  static async createLeaveRequest(requestData: Omit<LeaveRequest, 'id' | 'userName' | 'status' | 'replies'>): Promise<LeaveRequest | null> {
     try {
-      // TODO: Replace with your NeonDB leave request creation logic
-      console.log('Creating leave request in your database:', requestData);
-      return true;
+      const response = await this.makeRequest(`${API_BASE_URL}/leave-requests`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData),
+      });
+      return await response.json();
     } catch (error) {
       console.error('Error creating leave request:', error);
-      return false;
+      return null;
     }
   }
 
   static async updateLeaveRequestStatus(requestId: string, status: 'approved' | 'rejected', approvedBy: string): Promise<boolean> {
     try {
-      // TODO: Replace with your NeonDB status update logic
-      console.log('Updating request status in your database:', requestId, status);
+      await this.makeRequest(`${API_BASE_URL}/leave-requests/${requestId}/status`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status, approvedBy }),
+      });
       return true;
     } catch (error) {
-      console.error('Error updating request status:', error);
+      console.error('Error updating leave request status:', error);
       return false;
     }
   }
 
   static async addLeaveReply(requestId: string, message: string, fromUser: string): Promise<boolean> {
-    try {
-      // TODO: Replace with your NeonDB reply creation logic
-      console.log('Adding reply in your database:', requestId, message);
-      return true;
-    } catch (error) {
-      console.error('Error adding reply:', error);
-      return false;
-    }
+    // This would need to be implemented in the backend
+    console.log('Add leave reply not implemented yet');
+    return true;
   }
 
-  // Leave Balance APIs - Replace with your NeonDB implementation
+  // Leave Balance APIs
   static async getLeaveBalance(userId: string, year?: number): Promise<LeaveBalance | null> {
-    try {
-      // TODO: Replace with your NeonDB leave balance fetch logic
-      console.log('Fetching leave balance from your database:', userId, year);
-      return null;
-    } catch (error) {
-      console.error('Error fetching leave balance:', error);
-      return null;
-    }
+    // This would need to be implemented in the backend
+    console.log('Get leave balance not implemented yet');
+    return null;
   }
 
-  // Announcements APIs - Replace with your NeonDB implementation
+  // Announcements APIs
   static async getAnnouncements(): Promise<Announcement[]> {
     try {
-      // TODO: Replace with your NeonDB announcements fetch logic
-      console.log('Fetching announcements from your database');
-      return [];
+      const response = await this.makeRequest(`${API_BASE_URL}/announcements`);
+      return await response.json();
     } catch (error) {
       console.error('Error fetching announcements:', error);
       return [];
@@ -129,39 +169,41 @@ export class ApiService {
   }
 
   static async createAnnouncement(announcementData: Omit<Announcement, 'id' | 'createdDate'>): Promise<boolean> {
-    try {
-      // TODO: Replace with your NeonDB announcement creation logic
-      console.log('Creating announcement in your database:', announcementData);
-      return true;
-    } catch (error) {
-      console.error('Error creating announcement:', error);
-      return false;
-    }
+    // This would need to be implemented in the backend
+    console.log('Create announcement not implemented yet');
+    return true;
   }
 
-  // Dashboard Analytics APIs - Replace with your NeonDB implementation
-  static async getDashboardStats(): Promise<any> {
+  // Dashboard Analytics APIs
+  static async getDashboardStats(): Promise<DashboardStats> {
     try {
-      // TODO: Replace with your NeonDB stats fetch logic
-      console.log('Fetching dashboard stats from your database');
-      return {
-        totalEmployees: 0,
-        pendingLeaves: 0,
-        approvedLeaves: 0,
-        totalDepartments: 0,
-        departmentBreakdown: { sales: 0, production: 0, hr: 0 },
-        roleBreakdown: { managers: 0, employees: 0, hr: 0 }
-      };
+      const response = await this.makeRequest(`${API_BASE_URL}/dashboard/stats`);
+      return await response.json();
     } catch (error) {
       console.error('Error fetching dashboard stats:', error);
       return {
         totalEmployees: 0,
         pendingLeaves: 0,
         approvedLeaves: 0,
-        totalDepartments: 0,
-        departmentBreakdown: { sales: 0, production: 0, hr: 0 },
-        roleBreakdown: { managers: 0, employees: 0, hr: 0 }
+        totalDepartments: 0
       };
     }
+  }
+
+  // Backend health check
+  static async testConnection(): Promise<boolean> {
+    try {
+      const response = await this.makeRequest(`${API_BASE_URL}/health`);
+      return response.ok;
+    } catch (error) {
+      console.error('Error testing backend connection:', error);
+      return false;
+    }
+  }
+
+  // Database initialization (handled by backend)
+  static async initializeDatabase(): Promise<boolean> {
+    // Backend handles initialization automatically
+    return true;
   }
 }

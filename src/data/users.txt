@@ -1,10 +1,10 @@
 
-# GenesisHR Demo User Credentials
+# HR Portal Demo User Credentials
 # Format: username:password:role:department:firstName:lastName
 
-admin:Genesis@123:admin:admin:Admin:User
-hr_sarah:Genesis@123:hr:hr:Sarah:Johnson
-manager_sales:Genesis@123:manager:sales:Mike:Thompson
-manager_production:Genesis@123:manager:production:Lisa:Chen
-emp_sales_1:Genesis@123:employee:sales:John:Smith
-emp_production_1:Genesis@123:employee:production:Emma:Davis
+admin:Admin@123:admin:admin:Admin:User
+hr_sarah:Admin@123:hr:hr:Sarah:Johnson
+manager_sales:Admin@123:manager:sales:Mike:Thompson
+manager_production:Admin@123:manager:production:Lisa:Chen
+emp_sales_1:Admin@123:employee:sales:John:Smith
+emp_production_1:Admin@123:employee:production:Emma:Davis

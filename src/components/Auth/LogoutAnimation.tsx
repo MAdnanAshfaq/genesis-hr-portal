@@ -125,7 +125,7 @@ export function LogoutAnimation({ onComplete }: LogoutAnimationProps) {
                 </div>
               </div>
               <h2 className="text-4xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
-                GenesisHR
+                HR Portal
               </h2>
               <p className="text-purple-200 mt-2 text-lg">Goodbye! Come back soon.</p>
             </div>

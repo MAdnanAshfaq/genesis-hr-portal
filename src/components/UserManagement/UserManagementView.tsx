@@ -21,7 +21,7 @@ interface User {
 const mockUsers: User[] = [
   {
     id: '1',
-    email: 'admin@genesishr.com',
+    email: 'admin@hrportal.com',
     firstName: 'Admin',
     lastName: 'User',
     role: 'admin',
@@ -31,7 +31,7 @@ const mockUsers: User[] = [
   },
   {
     id: '2',
-    email: 'hr@genesishr.com',
+    email: 'hr@hrportal.com',
     firstName: 'Sarah',
     lastName: 'Johnson',
     role: 'hr',
@@ -41,7 +41,7 @@ const mockUsers: User[] = [
   },
   {
     id: '3',
-    email: 'manager@genesishr.com',
+    email: 'manager@hrportal.com',
     firstName: 'Mike',
     lastName: 'Wilson',
     role: 'manager',
@@ -51,7 +51,7 @@ const mockUsers: User[] = [
   },
   {
     id: '4',
-    email: 'employee@genesishr.com',
+    email: 'employee@hrportal.com',
     firstName: 'Emily',
     lastName: 'Davis',
     role: 'employee',
@@ -61,7 +61,7 @@ const mockUsers: User[] = [
   },
   {
     id: '5',
-    email: 'john.doe@genesishr.com',
+    email: 'john.doe@hrportal.com',
     firstName: 'John',
     lastName: 'Doe',
     role: 'employee',

@@ -12,7 +12,7 @@ import { Plus, Calendar, Clock, MessageSquare, Send, Loader2 } from 'lucide-reac
 
 export function LeaveRequestsList() {
   const { user } = useAuth();
-  const { requests, isLoading, updateRequestStatus, addReply } = useLeaveRequests();
+  const { requests, isLoading, createRequest, updateRequestStatus, addReply } = useLeaveRequests();
   const { toast } = useToast();
   const [showForm, setShowForm] = useState(false);
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
@@ -20,12 +20,38 @@ export function LeaveRequestsList() {
 
   if (!user) return null;
 
-  const handleSubmitRequest = () => {
-    setShowForm(false);
-    toast({
-      title: "Request Submitted",
-      description: "Your leave request has been submitted successfully.",
-    });
+  const handleSubmitRequest = async (requestData: any) => {
+    try {
+      const success = await createRequest({
+        userId: user.id,
+        type: requestData.type,
+        startDate: requestData.startDate,
+        endDate: requestData.endDate,
+        days: requestData.days,
+        reason: requestData.reason,
+      });
+      
+      if (success) {
+        setShowForm(false);
+        toast({
+          title: "Request Submitted",
+          description: "Your leave request has been submitted successfully.",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to submit leave request. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('Error submitting leave request:', error);
+      toast({
+        title: "Error",
+        description: "Failed to submit leave request. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleApproveRequest = async (requestId: string) => {

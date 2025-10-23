@@ -13,12 +13,8 @@ export function Logo({ size = 'md', className = '' }: LogoProps) {
   };
 
   return (
-    <div className={`${sizeClasses[size]} ${className} relative`}>
-      <img 
-        src="/lovable-uploads/f9bc9259-f6cb-4ec1-ac50-57d59612dad0.png" 
-        alt="GenesisHR Logo" 
-        className="w-full h-full object-contain drop-shadow-lg"
-      />
+    <div className={`${sizeClasses[size]} ${className} relative flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg`}>
+      <span className="text-white font-bold text-sm">HR</span>
     </div>
   );
 }

@@ -160,8 +160,16 @@ export function LoginForm() {
                   <span className="text-white font-bold text-2xl">G</span>
                 </div>
               </div>
-              <h2 className="text-4xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">Welcome to GenesisHR</h2>
+              <h2 className="text-4xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">Welcome to HR Portal</h2>
               <p className="text-purple-200 mt-2 text-lg">Enter the future of workforce management</p>
+              <div className="mt-4 p-4 bg-blue-500/20 border border-blue-400/30 rounded-lg">
+                <p className="text-blue-200 text-sm">
+                  <strong>Admin Login:</strong> Use username <code className="bg-blue-600/30 px-1 rounded">admin</code> and password <code className="bg-blue-600/30 px-1 rounded">Admin@123</code>
+                </p>
+                <p className="text-blue-200 text-xs mt-1">
+                  After login, you can create additional users through the Admin Console.
+                </p>
+              </div>
             </div>
 
             <Card className="signin-card backdrop-blur-md bg-white/10 border-purple-500/30 shadow-2xl hover:shadow-purple-500/20 transition-all duration-300 transform hover:scale-105">

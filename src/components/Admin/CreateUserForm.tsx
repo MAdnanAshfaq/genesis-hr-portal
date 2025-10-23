@@ -20,7 +20,7 @@ export function CreateUserForm({ onSuccess, onCancel }: CreateUserFormProps) {
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     username: '',
-    password: 'Genesis@123sword',
+    password: 'Admin@123sword',
     firstName: '',
     lastName: '',
     role: '' as 'hr' | 'manager' | 'employee' | '',
@@ -147,7 +147,7 @@ export function CreateUserForm({ onSuccess, onCancel }: CreateUserFormProps) {
                 required
               />
               <p className="text-xs text-gray-500">
-                Default password is Genesis@123sword. User can change it after first login.
+                Default password is Admin@123sword. User can change it after first login.
               </p>
             </div>
 

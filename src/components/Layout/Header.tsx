@@ -38,7 +38,7 @@ export function Header() {
       case 'hr': return 'HR Portal';
       case 'manager': return `${user.department.charAt(0).toUpperCase() + user.department.slice(1)} Manager Portal`;
       case 'employee': return `Employee Portal - ${user.department.charAt(0).toUpperCase() + user.department.slice(1)}`;
-      default: return 'GenesisHR';
+      default: return 'HR Portal';
     }
   };
 
@@ -61,7 +61,7 @@ export function Header() {
                 <span className="text-white font-bold text-sm">G</span>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">GenesisHR</h1>
+                <h1 className="text-xl font-bold text-gray-900">HR Portal</h1>
                 <p className="text-sm text-gray-600 flex items-center gap-1">
                   <RoleIcon className="h-3 w-3" />
                   {getPortalTitle()}

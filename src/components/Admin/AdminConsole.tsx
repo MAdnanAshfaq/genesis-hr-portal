@@ -71,7 +71,7 @@ export function AdminConsole() {
   };
 
   const copyCredentials = (username: string) => {
-    const credentials = `Username: ${username}\nPassword: Genesis@123sword`;
+    const credentials = `Username: ${username}\nPassword: Admin@123sword`;
     navigator.clipboard.writeText(credentials);
     toast({
       title: "Credentials Copied",

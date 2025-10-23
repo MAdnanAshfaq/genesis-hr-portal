@@ -29,12 +29,12 @@ export function ProfileView() {
             </Avatar>
             <div>
               <CardTitle className="text-2xl">{user.firstName} {user.lastName}</CardTitle>
-              <CardDescription className="text-lg capitalize flex items-center gap-2">
+              <div className="text-lg capitalize flex items-center gap-2 text-muted-foreground">
                 <Badge variant="outline" className="capitalize">
                   {user.role}
                 </Badge>
                 • {user.department}
-              </CardDescription>
+              </div>
             </div>
           </div>
         </CardHeader>

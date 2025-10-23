@@ -21,11 +21,12 @@ export function useLeaveRequests() {
 
   const createRequest = async (requestData: Omit<LeaveRequest, 'id' | 'userName' | 'status' | 'replies'>) => {
     try {
-      const success = await ApiService.createLeaveRequest(requestData);
-      if (success) {
+      const newRequest = await ApiService.createLeaveRequest(requestData);
+      if (newRequest) {
         await fetchRequests();
+        return true;
       }
-      return success;
+      return false;
     } catch (error) {
       console.error('Error creating leave request:', error);
       return false;

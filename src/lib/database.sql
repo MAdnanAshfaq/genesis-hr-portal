@@ -1,11 +1,11 @@
 
--- Enable Row Level Security
-ALTER TABLE auth.users ENABLE ROW LEVEL SECURITY;
+-- Database schema for HR Portal
 
 -- Create users table
 CREATE TABLE IF NOT EXISTS public.users (
-  id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   username VARCHAR(50) UNIQUE NOT NULL,
+  password VARCHAR(255) NOT NULL,
   first_name VARCHAR(100) NOT NULL,
   last_name VARCHAR(100) NOT NULL,
   role VARCHAR(20) NOT NULL CHECK (role IN ('admin', 'hr', 'manager', 'employee')),
@@ -67,134 +67,16 @@ CREATE TABLE IF NOT EXISTS public.leave_balances (
   UNIQUE(user_id, year)
 );
 
--- Row Level Security Policies
+-- Note: Row Level Security policies are commented out for NeonDB
+-- as they require Supabase Auth. For production, implement proper
+-- authentication and authorization at the application level.
 
--- Users table policies
-CREATE POLICY "Users can view their own profile" ON public.users
-  FOR SELECT USING (auth.uid() = id);
-
-CREATE POLICY "Admins and HR can view all users" ON public.users
-  FOR SELECT USING (
-    EXISTS (
-      SELECT 1 FROM public.users 
-      WHERE id = auth.uid() AND role IN ('admin', 'hr')
-    )
-  );
-
-CREATE POLICY "Admins and HR can insert users" ON public.users
-  FOR INSERT WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM public.users 
-      WHERE id = auth.uid() AND role IN ('admin', 'hr')
-    )
-  );
-
-CREATE POLICY "Admins and HR can update users" ON public.users
-  FOR UPDATE USING (
-    EXISTS (
-      SELECT 1 FROM public.users 
-      WHERE id = auth.uid() AND role IN ('admin', 'hr')
-    )
-  );
-
-CREATE POLICY "Admins can delete users" ON public.users
-  FOR DELETE USING (
-    EXISTS (
-      SELECT 1 FROM public.users 
-      WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
-
--- Leave requests policies
-CREATE POLICY "Users can view their own leave requests" ON public.leave_requests
-  FOR SELECT USING (auth.uid() = user_id);
-
-CREATE POLICY "Managers and HR can view all leave requests" ON public.leave_requests
-  FOR SELECT USING (
-    EXISTS (
-      SELECT 1 FROM public.users 
-      WHERE id = auth.uid() AND role IN ('manager', 'hr', 'admin')
-    )
-  );
-
-CREATE POLICY "Users can create their own leave requests" ON public.leave_requests
-  FOR INSERT WITH CHECK (auth.uid() = user_id);
-
-CREATE POLICY "Managers and HR can update leave requests" ON public.leave_requests
-  FOR UPDATE USING (
-    EXISTS (
-      SELECT 1 FROM public.users 
-      WHERE id = auth.uid() AND role IN ('manager', 'hr', 'admin')
-    )
-  );
-
--- Leave replies policies
-CREATE POLICY "Users can view replies to their requests" ON public.leave_replies
-  FOR SELECT USING (
-    EXISTS (
-      SELECT 1 FROM public.leave_requests 
-      WHERE id = leave_request_id AND user_id = auth.uid()
-    ) OR
-    EXISTS (
-      SELECT 1 FROM public.users 
-      WHERE id = auth.uid() AND role IN ('manager', 'hr', 'admin')
-    )
-  );
-
-CREATE POLICY "Managers and HR can create replies" ON public.leave_replies
-  FOR INSERT WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM public.users 
-      WHERE id = auth.uid() AND role IN ('manager', 'hr', 'admin')
-    )
-  );
-
--- Announcements policies
-CREATE POLICY "All users can view announcements" ON public.announcements
-  FOR SELECT USING (true);
-
-CREATE POLICY "HR and Admins can create announcements" ON public.announcements
-  FOR INSERT WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM public.users 
-      WHERE id = auth.uid() AND role IN ('hr', 'admin')
-    )
-  );
-
-CREATE POLICY "HR and Admins can update announcements" ON public.announcements
-  FOR UPDATE USING (
-    EXISTS (
-      SELECT 1 FROM public.users 
-      WHERE id = auth.uid() AND role IN ('hr', 'admin')
-    )
-  );
-
-CREATE POLICY "Admins can delete announcements" ON public.announcements
-  FOR DELETE USING (
-    EXISTS (
-      SELECT 1 FROM public.users 
-      WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
-
--- Leave balances policies
-CREATE POLICY "Users can view their own leave balance" ON public.leave_balances
-  FOR SELECT USING (auth.uid() = user_id);
-
-CREATE POLICY "HR and Admins can view all leave balances" ON public.leave_balances
-  FOR SELECT USING (
-    EXISTS (
-      SELECT 1 FROM public.users 
-      WHERE id = auth.uid() AND role IN ('hr', 'admin')
-    )
-  );
-
--- Enable RLS on all tables
-ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.leave_requests ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.leave_replies ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.announcements ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.leave_balances ENABLE ROW LEVEL SECURITY;
+-- Enable RLS on all tables (optional for NeonDB)
+-- ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
+-- ALTER TABLE public.leave_requests ENABLE ROW LEVEL SECURITY;
+-- ALTER TABLE public.leave_replies ENABLE ROW LEVEL SECURITY;
+-- ALTER TABLE public.announcements ENABLE ROW LEVEL SECURITY;
+-- ALTER TABLE public.leave_balances ENABLE ROW LEVEL SECURITY;
 
 -- Create functions for automatic leave balance management
 CREATE OR REPLACE FUNCTION create_leave_balance_for_new_user()
